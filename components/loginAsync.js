@@ -3,6 +3,8 @@ import {
   Text,
   TextInput,
   View,
+  Modal,
+  Pressable,
   Alert,
   TouchableHighlight,
   StyleSheet,
@@ -22,11 +24,15 @@ class loginAsync extends Component {
       token: "",
       email: "",
       password: "",
+      modalVisible: false,
     };
   }
   myFunction() {
     console.log(this.state.token);
   }
+  setModalVisible = (visible) => {
+    this.setState({ modalVisible: visible });
+  };
   signedInUser = async () => {
     const value = await AsyncStorage.getItem("token");
     if (value !== null) {
@@ -84,7 +90,7 @@ class loginAsync extends Component {
   }
 
   render() {
-    const tokk = "ff0d8dc33d9277370b51eb985bd5449e";
+    const { modalVisible } = this.state;
     this.signedInUser(); // is asyncstorage is set we want to direct user to HOME with this function.
     const nav = this.props.navigation;
     return (
@@ -132,6 +138,35 @@ class loginAsync extends Component {
             <Text style={ss.text}>clear</Text>
           </View>
         </TouchableHighlight>
+        <View style={ss.centeredView}>
+          <Modal
+            animationType="slide"
+            transparent={true}
+            visible={modalVisible}
+            onRequestClose={() => {
+              Alert.alert("Modal has been closed.");
+              this.setModalVisible(!modalVisible);
+            }}
+          >
+            <View style={ss.centeredView}>
+              <View style={ss.modalView}>
+                <Text style={ss.modalText}>Hello World!</Text>
+                <Pressable
+                  style={[ss.button, ss.buttonClose]}
+                  onPress={() => this.setModalVisible(!modalVisible)}
+                >
+                  <Text style={ss.textStyle}>Hide Modal</Text>
+                </Pressable>
+              </View>
+            </View>
+          </Modal>
+          <Pressable
+            style={[ss.button, ss.buttonOpen]}
+            onPress={() => this.setModalVisible(true)}
+          >
+            <Text style={ss.textStyle}>Show Modal</Text>
+          </Pressable>
+        </View>
       </View>
     );
   }
@@ -182,5 +217,47 @@ const ss = StyleSheet.create({
     backgroundColor: "#f68e5f",
     borderRadius: 20,
     width: 150,
+  },
+
+  centeredView: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    marginTop: 22,
+  },
+  modalView: {
+    margin: 20,
+    backgroundColor: "white",
+    borderRadius: 20,
+    padding: 35,
+    alignItems: "center",
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 4,
+    elevation: 5,
+  },
+  button: {
+    borderRadius: 20,
+    padding: 10,
+    elevation: 2,
+  },
+  buttonOpen: {
+    backgroundColor: "#F194FF",
+  },
+  buttonClose: {
+    backgroundColor: "#2196F3",
+  },
+  textStyle: {
+    color: "white",
+    fontWeight: "bold",
+    textAlign: "center",
+  },
+  modalText: {
+    marginBottom: 15,
+    textAlign: "center",
   },
 });

@@ -16,6 +16,7 @@ import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import HomeScreen from "./components/HomeScreen";
 import about from "./components/about";
 import loginAsync from "./components/loginAsync";
+import locations from "./components/locations";
 
 class App extends Component {
   render() {
@@ -29,12 +30,13 @@ class App extends Component {
             component={loginAsync}
             options={{ title: "Welcome" }}
           />
+          <Stack.Screen name="Home" component={HomeScreen} />
           <Stack.Screen
             name="about"
             component={about}
             options={{ title: "Add" }}
           />
-          <Stack.Screen name="Home" component={HomeScreen} />
+          <Stack.Screen name="locations" component={locations} />
         </Stack.Navigator>
       </NavigationContainer>
     );

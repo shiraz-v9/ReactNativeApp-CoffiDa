@@ -8,8 +8,8 @@ import {
   Button,
   StyleSheet,
 } from "react-native";
-import loginAsync from "./loginAsync";
-import { ScrollView } from "react-native-gesture-handler";
+
+import { ScrollView, TouchableOpacity } from "react-native-gesture-handler";
 
 class HomeScreen extends Component {
   constructor(props) {
@@ -20,6 +20,35 @@ class HomeScreen extends Component {
       locations: [],
     };
   }
+
+  logOut = async () => {
+    const id = await AsyncStorage.getItem("token");
+    const token = id.substr(1, id.length);
+    fetch("http://10.0.2.2:3333/api/1.0.0/user/logout", {
+      method: "POST",
+      headers: { "X-Authorization": token },
+    })
+      .then((response) => {
+        if (response.ok) {
+          AsyncStorage.clear();
+          alert("logged out");
+          console.log("logged out..." + AsyncStorage.getItem("token"));
+          this.notSignedIn();
+        }
+      })
+
+      .catch((error) => {
+        alert(JSON.stringify(jsonData) + error);
+        console.log(error);
+      });
+  };
+
+  notSignedIn = async () => {
+    const value = await AsyncStorage.getItem("token");
+    if (value == null) {
+      this.props.navigation.navigate("loginAsync");
+    }
+  };
 
   getLocation = async () => {
     const id = await AsyncStorage.getItem("token");
@@ -60,26 +89,14 @@ class HomeScreen extends Component {
       })
       .catch((error) => {
         console.log(error);
+        alert("Unauthorised/ wrong token. LogOut and try again");
       });
   };
   componentDidMount() {
+    this.notSignedIn();
     this.getData();
     this.getLocation();
   }
-  // deleteItem(id) {
-  //   return fetch("http://10.0.2.2:3333/list/" + id, {
-  //     method: "deleasdate",
-  //   })
-  //     .then((response) => {
-  //       this.getData();
-  //     })
-  //     .then((response) => {
-  //       Alert.alert("Item deleted");
-  //     })
-  //     .catch((error) => {
-  //       console.log(error);
-  //     });
-  // }
 
   render() {
     const nav = this.props.navigation;
@@ -95,6 +112,7 @@ class HomeScreen extends Component {
       <View>
         <Button title="add" onPress={() => nav.navigate("about")} />
         <Button title="login" onPress={() => nav.navigate("loginAsync")} />
+        <Button title="locs" onPress={() => nav.navigate("locations")} />
         <View style={ss.container}>
           <Text style={ss.title}>
             Welcome to CoffiDa mr {this.state.userData.last_name}
@@ -104,13 +122,14 @@ class HomeScreen extends Component {
             style={ss.flatList}
             data={this.state.locations}
             renderItem={({ item }) => (
-              <View>
+              <TouchableOpacity onPress={() => nav.navigate("locations")}>
                 <Text style={ss.text}>{item.location_name}</Text>
-              </View>
+              </TouchableOpacity>
             )}
-            keyExtractor={({ location_id }, index) => location_id}
+            keyExtractor={(itemid, index) => itemid.location_id}
           />
         </View>
+        <Button title="logout" onPress={() => this.logOut()} />
       </View>
     );
   }
