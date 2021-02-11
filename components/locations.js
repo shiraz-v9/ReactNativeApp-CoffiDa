@@ -9,10 +9,10 @@ import {
   ActivityIndicator,
 } from "react-native";
 
-class about extends Component {
+class locations extends Component {
   render() {
     return (
-      <View style={[styles.container, styles.horizontal]}>
+      <View style={styles.container}>
         <Text>Hello!!!</Text>
         <ActivityIndicator size="large" color="#00ff00" />
       </View>
@@ -24,58 +24,10 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     justifyContent: "center",
-  },
-  horizontal: {
-    flexDirection: "row",
-    justifyContent: "space-around",
+    flexDirection: "column",
+    justifyContent: "flex-start",
     padding: 10,
   },
 });
 
-export default about;
-
-const ss = StyleSheet.create({
-  scrollView: {
-    backgroundColor: "white",
-  },
-  engine: {
-    position: "absolute",
-    right: 0,
-  },
-  body: {
-    backgroundColor: "white",
-  },
-
-  sectionTitle: {
-    fontSize: 24,
-    fontWeight: "600",
-    color: "black",
-  },
-  sectionDescription: {
-    marginTop: 8,
-    fontSize: 18,
-    fontWeight: "400",
-    color: "black",
-  },
-  highlight: {
-    //add bold text
-    fontWeight: "700",
-  },
-  footer: {
-    color: "black",
-    fontSize: 12,
-    fontWeight: "600",
-    padding: 4,
-    paddingRight: 12,
-    textAlign: "right",
-  },
-  container: {
-    flex: 1,
-    justifyContent: "center",
-  },
-  horizontal: {
-    flexDirection: "row",
-    justifyContent: "space-around",
-    padding: 10,
-  },
-});
+export default locations;

@@ -22,8 +22,7 @@ class HomeScreen extends Component {
   }
 
   logOut = async () => {
-    const id = await AsyncStorage.getItem("token");
-    const token = id.substr(1, id.length);
+    const token = await AsyncStorage.getItem("token");
     fetch("http://10.0.2.2:3333/api/1.0.0/user/logout", {
       method: "POST",
       headers: { "X-Authorization": token },
@@ -51,8 +50,8 @@ class HomeScreen extends Component {
   };
 
   getLocation = async () => {
-    const id = await AsyncStorage.getItem("token");
-    const token = id.substr(1, id.length);
+    const token = await AsyncStorage.getItem("token");
+
     fetch("http://10.0.2.2:3333/api/1.0.0/find", {
       headers: {
         Accept: "application/json",
@@ -72,9 +71,9 @@ class HomeScreen extends Component {
   };
 
   getData = async () => {
-    const id = await AsyncStorage.getItem("token");
-    const token = id.substr(1, id.length);
-    fetch("http://10.0.2.2:3333/api/1.0.0/user/" + id.charAt(0), {
+    const token = await AsyncStorage.getItem("token");
+    const value = this.props.route.params.id;
+    fetch("http://10.0.2.2:3333/api/1.0.0/user/" + value, {
       headers: {
         Accept: "application/json",
         "X-Authorization": token,
@@ -110,9 +109,9 @@ class HomeScreen extends Component {
 
     return (
       <View>
-        <Button title="add" onPress={() => nav.navigate("about")} />
+        <Button title="signup" onPress={() => nav.navigate("signup")} />
         <Button title="login" onPress={() => nav.navigate("loginAsync")} />
-        <Button title="locs" onPress={() => nav.navigate("locations")} />
+        <Button title="locations" onPress={() => nav.navigate("locations")} />
         <View style={ss.container}>
           <Text style={ss.title}>
             Welcome to CoffiDa mr {this.state.userData.last_name}

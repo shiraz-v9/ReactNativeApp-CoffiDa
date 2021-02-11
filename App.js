@@ -14,7 +14,7 @@ import { createStackNavigator } from "@react-navigation/stack";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 
 import HomeScreen from "./components/HomeScreen";
-import about from "./components/about";
+import signup from "./components/signup";
 import loginAsync from "./components/loginAsync";
 import locations from "./components/locations";
 
@@ -32,9 +32,9 @@ class App extends Component {
           />
           <Stack.Screen name="Home" component={HomeScreen} />
           <Stack.Screen
-            name="about"
-            component={about}
-            options={{ title: "Add" }}
+            name="signup"
+            component={signup}
+            options={{ title: "Create your Account" }}
           />
           <Stack.Screen name="locations" component={locations} />
         </Stack.Navigator>

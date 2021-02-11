@@ -17,19 +17,15 @@ class loginAsync extends Component {
   //start my state
   constructor(props) {
     super(props);
-    this.myFunction = this.myFunction.bind(this);
     this.state = {};
 
     this.state = {
       token: "",
       email: "",
       password: "",
-      modalVisible: false,
     };
   }
-  myFunction() {
-    console.log(this.state.token);
-  }
+
   setModalVisible = (visible) => {
     this.setState({ modalVisible: visible });
   };
@@ -41,8 +37,8 @@ class loginAsync extends Component {
   };
   loggedInCoffiDa = async (data) => {
     try {
-      await AsyncStorage.setItem("token", data.id + data.token); //passing id with token together
-      this.props.navigation.navigate("Home");
+      await AsyncStorage.setItem("token", data.token); //passing id with token togetherdata.id +
+      this.props.navigation.navigate("Home", data);
     } catch (error) {
       console.log(error);
     }
@@ -52,11 +48,37 @@ class loginAsync extends Component {
     await AsyncStorage.clear();
   };
   checkJSON = async () => {
-    // just a way to test my token retrieved
+    //TESTING ONLY⚡⚠
     const value = await AsyncStorage.getItem("token");
-    const t = value.substr(1, value.length);
-    alert(value + "   " + t);
+    // const x = this.props.navigation.getParam("name");
+    // var { name, age, city } = this.props.route.params;
+    // if (this.props.route.params == undefined || null) {
+    //   alert("undefineddd");
+    // } else {
+    //   alert(
+    //     " -- " +
+    //       this.props.route.params.name +
+    //       this.props.route.params.city +
+    //       this.props.route.params.age
+    //   );
+    // }
+    alert("here" + this.state.email + this.state.password + "token " + value);
   };
+
+  // didUserSignUp() { // AUTO sign in - WILL impolemented later!! ⚡⚡ Put this in render aswell
+  //   // const { email, password } = this.props.route.params;
+  //   if (this.props.route.params !== undefined) {
+  //     this.setState({
+  //       email: this.props.route.params.email,
+  //       password: this.props.route.params.password,
+  //     });
+  //     this.loginGetToken();
+  //   }
+  // }
+  // componentDidMount() {
+  //   this.didUserSignUp();
+  // }
+
   loginGetToken() {
     jsonData = {
       email: this.state.email,
@@ -70,12 +92,7 @@ class loginAsync extends Component {
     })
       .then((response) => response.json())
       .then((data) => {
-        alert(
-          "Welcome back " +
-            data.id +
-            " you have logged in with token " +
-            data.token
-        );
+        alert("Welcome back you have logged in with token " + data.token);
         this.setState({
           token: data,
         });
@@ -84,13 +101,12 @@ class loginAsync extends Component {
       })
 
       .catch((error) => {
-        alert(JSON.stringify(jsonData) + error);
+        alert(error);
         console.log(error);
       });
   }
 
   render() {
-    const { modalVisible } = this.state;
     this.signedInUser(); // is asyncstorage is set we want to direct user to HOME with this function.
     const nav = this.props.navigation;
     return (
@@ -121,7 +137,7 @@ class loginAsync extends Component {
 
           <TouchableHighlight
             style={ss.thButton}
-            onPress={() => this.checkJSON()}
+            onPress={() => nav.navigate("signup")}
             underlayColor="#fff"
           >
             <View>
@@ -135,38 +151,18 @@ class loginAsync extends Component {
           underlayColor="#fff"
         >
           <View>
-            <Text style={ss.text}>clear</Text>
+            <Text style={ss.text}>CLEAR</Text>
           </View>
         </TouchableHighlight>
-        <View style={ss.centeredView}>
-          <Modal
-            animationType="slide"
-            transparent={true}
-            visible={modalVisible}
-            onRequestClose={() => {
-              Alert.alert("Modal has been closed.");
-              this.setModalVisible(!modalVisible);
-            }}
-          >
-            <View style={ss.centeredView}>
-              <View style={ss.modalView}>
-                <Text style={ss.modalText}>Hello World!</Text>
-                <Pressable
-                  style={[ss.button, ss.buttonClose]}
-                  onPress={() => this.setModalVisible(!modalVisible)}
-                >
-                  <Text style={ss.textStyle}>Hide Modal</Text>
-                </Pressable>
-              </View>
-            </View>
-          </Modal>
-          <Pressable
-            style={[ss.button, ss.buttonOpen]}
-            onPress={() => this.setModalVisible(true)}
-          >
-            <Text style={ss.textStyle}>Show Modal</Text>
-          </Pressable>
-        </View>
+        <TouchableHighlight
+          style={ss.clearBtn}
+          onPress={() => this.checkJSON()}
+          underlayColor="#fff"
+        >
+          <View>
+            <Text style={ss.text}>TEST</Text>
+          </View>
+        </TouchableHighlight>
       </View>
     );
   }
