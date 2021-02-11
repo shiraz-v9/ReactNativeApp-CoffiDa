@@ -18,6 +18,7 @@ class HomeScreen extends Component {
       isLoading: true,
       userData: [],
       locations: [],
+      id: "",
     };
   }
 
@@ -69,11 +70,21 @@ class HomeScreen extends Component {
         console.log(error);
       });
   };
-
+  tester() {
+    alert(
+      this.state.id +
+        " --user data-- " +
+        this.state.userData +
+        " --locations -- " +
+        this.state.locations
+    );
+  }
   getData = async () => {
     const token = await AsyncStorage.getItem("token");
-    const value = this.props.route.params.id;
-    fetch("http://10.0.2.2:3333/api/1.0.0/user/" + value, {
+    this.setState({
+      id: this.props.route.params.id,
+    });
+    fetch("http://10.0.2.2:3333/api/1.0.0/user/" + this.state.id, {
       headers: {
         Accept: "application/json",
         "X-Authorization": token,
@@ -121,7 +132,7 @@ class HomeScreen extends Component {
             style={ss.flatList}
             data={this.state.locations}
             renderItem={({ item }) => (
-              <TouchableOpacity onPress={() => nav.navigate("locations")}>
+              <TouchableOpacity onPress={() => nav.navigate("locations", item)}>
                 <Text style={ss.text}>{item.location_name}</Text>
               </TouchableOpacity>
             )}
@@ -129,6 +140,7 @@ class HomeScreen extends Component {
           />
         </View>
         <Button title="logout" onPress={() => this.logOut()} />
+        <Button title="TEST" onPress={() => this.tester()} />
       </View>
     );
   }
