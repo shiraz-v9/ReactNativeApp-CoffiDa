@@ -3,9 +3,6 @@ import {
   Text,
   TextInput,
   View,
-  Modal,
-  Pressable,
-  Alert,
   TouchableHighlight,
   StyleSheet,
 } from "react-native";

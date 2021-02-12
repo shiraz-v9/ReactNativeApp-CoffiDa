@@ -136,7 +136,7 @@ class HomeScreen extends Component {
                 <Text style={ss.text}>{item.location_name}</Text>
               </TouchableOpacity>
             )}
-            keyExtractor={(itemid, index) => itemid.location_id}
+            keyExtractor={(itemid) => itemid.location_id}
           />
         </View>
         <Button title="logout" onPress={() => this.logOut()} />
