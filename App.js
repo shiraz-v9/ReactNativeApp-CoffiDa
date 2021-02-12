@@ -17,6 +17,7 @@ import HomeScreen from "./components/HomeScreen";
 import signup from "./components/signup";
 import loginAsync from "./components/loginAsync";
 import locations from "./components/locations";
+import review from "./components/review";
 
 class App extends Component {
   render() {
@@ -37,6 +38,7 @@ class App extends Component {
             options={{ title: "Create your Account" }}
           />
           <Stack.Screen name="locations" component={locations} />
+          <Stack.Screen name="review" component={review} />
         </Stack.Navigator>
       </NavigationContainer>
     );

@@ -79,7 +79,7 @@ class HomeScreen extends Component {
         this.state.locations
     );
   }
-  getData = async () => {
+  getUser = async () => {
     const token = await AsyncStorage.getItem("token");
     this.setState({
       id: this.props.route.params.id,
@@ -104,7 +104,7 @@ class HomeScreen extends Component {
   };
   componentDidMount() {
     this.notSignedIn();
-    this.getData();
+    this.getUser();
     this.getLocation();
   }
 

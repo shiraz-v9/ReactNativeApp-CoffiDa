@@ -20,52 +20,10 @@ class locations extends Component {
       coffeeDeets: [],
       latitude: "",
       longitude: "",
-      id: "",
-      btnText: "next->",
-      review: "",
-      price: "",
-      quality: "",
-      clenliness: "",
-      placeHolder: "Your review..",
     };
   }
+  componentDidMount() {}
 
-  leaveReview() {
-    this.setState({
-      id: this.props.route.params.location_id,
-    });
-    var jsonComment = {
-      overall_rating: 4,
-      price_rating: 2,
-      quality_rating: 3,
-      clenliness_rating: 5,
-      review_body: "Great coffee, but the bathrooms stank!",
-    };
-    console.log(
-      "Getting id from state..." +
-        this.state.id +
-        " Posting comment " +
-        JSON.stringify(jsonComment)
-    );
-    // fetch(
-    //   "http://10.0.2.2:3333/api/1.0.0/location/" + this.state.id + "/review",
-    //   {
-    //     method: "POST",
-    //     headers: { "Content-Type": "application/json" },
-    //     body: JSON.stringify(jsonComment),
-    //   }
-    // )
-    //   .then((response) => {
-    //     if (response.ok) {
-    //       console.log("SUCCESS 200 OK...");
-    //       //run function
-    //     }
-    //   })
-    //   .catch((error) => {
-    //     console.log(error);
-    //     alert("Some Issues encountered" + error);
-    //   });
-  }
   render() {
     return (
       <View style={ss.mapContainer}>
@@ -113,18 +71,24 @@ class locations extends Component {
             <Text style={ss.title}> Location reviews:</Text>
             {/*⚡ --> Post Comment Section */}
             <View style={ss.inputBtnContainer}>
-              <TextInput
+              <Text>Leave a review</Text>
+              {/* <TextInput
                 placeholder={this.state.placeHolder}
                 onChangeText={(review) => this.setState({ review })}
                 value={this.setState.review}
-              />
+              /> */}
               <TouchableHighlight
                 style={ss.thButton}
-                onPress={() => this.getReviewData()}
+                onPress={() =>
+                  this.props.navigation.navigate("review", {
+                    id: this.props.route.params.location_id,
+                    location: this.props.route.params.location_name,
+                  })
+                }
                 underlayColor="#fff"
               >
                 <View>
-                  <Text style={ss.textBtn}>{this.state.btnText}</Text>
+                  <Text style={ss.textBtn}> --> </Text>
                 </View>
               </TouchableHighlight>
             </View>
