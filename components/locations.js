@@ -5,7 +5,7 @@ import {
   View,
   StyleSheet,
   ActivityIndicator,
-  TextInput,
+  TouchableOpacity,
   TouchableHighlight,
 } from "react-native";
 import { ScrollView } from "react-native-gesture-handler";
@@ -20,8 +20,19 @@ class locations extends Component {
     this.state = {
       coffeeDeets: [],
       isLoading: true,
+      heartColour: "",
     };
   }
+  changeTitle() {
+    this.props.navigation.setOptions({
+      title: this.props.route.params.name, //change the title
+    });
+  }
+
+  likeFunction() {
+    console.log("data " + this.props.route.params.fav.location_name);
+  }
+
   getLocationID = async () => {
     const id = this.props.route.params.item;
     const token = await AsyncStorage.getItem("token");
@@ -36,14 +47,68 @@ class locations extends Component {
         this.setState({
           isLoading: false,
           coffeeDeets: responseJson,
+          heartColour: "🤍",
         });
       })
       .catch((error) => {
         console.log(error);
       });
   };
+
+  favouriteLocation = async () => {
+    const id = this.props.route.params.item;
+    const token = await AsyncStorage.getItem("token");
+    fetch("http://10.0.2.2:3333/api/1.0.0/location/" + id + "/favourite", {
+      method: "POST",
+      headers: {
+        Accept: "application/json",
+        "X-Authorization": token,
+      },
+    })
+      .then((response) => {
+        if (response.ok) {
+          this.setState({
+            heartColour: "❤",
+          });
+          console.log(
+            "Location: " + this.state.coffeeDeets.location_name + " favourited!"
+          );
+        } else {
+          console.log("error occured...");
+        }
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  };
+  unFavouriteLocation = async () => {
+    const id = this.props.route.params.item;
+    const token = await AsyncStorage.getItem("token");
+    fetch("http://10.0.2.2:3333/api/1.0.0/location/" + id + "/favourite", {
+      method: "DELETE",
+      headers: {
+        Accept: "application/json",
+        "X-Authorization": token,
+      },
+    })
+      .then((response) => {
+        if (response.ok) {
+          console.log(
+            "Location: " + this.state.coffeeDeets.location_name + " favourited!"
+          );
+        } else {
+          console.log("error occured...");
+        }
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  };
+
   componentDidMount() {
     this.getLocationID();
+    this.changeTitle();
+    this.likeFunction();
   }
   render() {
     if (this.state.isLoading) {
@@ -57,12 +122,12 @@ class locations extends Component {
       <View style={ss.content}>
         <MapView
           provider={PROVIDER_GOOGLE}
-          style={ss.mapContainer}
+          style={ss.content}
           region={{
             latitude: this.state.coffeeDeets.latitude,
             longitude: this.state.coffeeDeets.longitude,
-            latitudeDelta: 0.5,
-            longitudeDelta: 0.5,
+            latitudeDelta: 1,
+            longitudeDelta: 1,
           }}
         >
           <Marker
@@ -74,8 +139,8 @@ class locations extends Component {
             description="Come and find Us!"
           />
         </MapView>
-        <ScrollView>
-          <View style={ss.scrollView}>
+        <View style={ss.scrollView}>
+          <ScrollView>
             <View style={ss.Header}>
               <Text style={ss.title}>
                 {""}
@@ -85,6 +150,9 @@ class locations extends Component {
                 {""}
                 {this.state.coffeeDeets.location_town}
               </Text>
+              <TouchableOpacity onPress={() => this.favouriteLocation()}>
+                <Text style={ss.title}>{this.state.heartColour}</Text>
+              </TouchableOpacity>
             </View>
             <Text style={ss.text}>
               Overall Rating: {this.state.coffeeDeets.avg_overall_rating}
@@ -102,12 +170,6 @@ class locations extends Component {
             <Text style={ss.title}> Location reviews:</Text>
             {/*⚡ --> Post Comment Section */}
             <View style={ss.inputBtnContainer}>
-              <Text>Leave a review</Text>
-              {/* <TextInput
-                placeholder={this.state.placeHolder}
-                onChangeText={(review) => this.setState({ review })}
-                value={this.setState.review}
-              /> */}
               <TouchableHighlight
                 style={ss.thButton}
                 onPress={() =>
@@ -119,17 +181,16 @@ class locations extends Component {
                 underlayColor="#fff"
               >
                 <View>
-                  <Text style={ss.textBtn}> -- </Text>
+                  <Text style={ss.textBtn}> Leave a review </Text>
                 </View>
               </TouchableHighlight>
             </View>
             {this.state.coffeeDeets.location_reviews.map((item, i) => {
               return (
                 <Text style={ss.comment} key={i}>
-                  {item.review_body} - Rating {item.review_overallrating} -
-                  Price {item.review_pricerating} - Quality{" "}
-                  {item.review_qualityrating} - Cleanliness -{" "}
-                  {item.review_clenlinessrating} - {item.likes} Likes
+                  {item.review_body} - Rating {item.overall_rating} - Price{" "}
+                  {item.price_rating} - Quality {item.quality_rating} -
+                  Cleanliness - {item.clenliness_rating} - {item.likes} Likes
                 </Text>
               );
               // this.setState({
@@ -137,8 +198,8 @@ class locations extends Component {
               //   longitude: "s",
               // });
             })}
-          </View>
-        </ScrollView>
+          </ScrollView>
+        </View>
       </View>
     );
   }
@@ -148,7 +209,8 @@ export default locations;
 
 const ss = StyleSheet.create({
   scrollView: {
-    flex: 2,
+    flex: 3,
+    paddingHorizontal: 20,
   },
   engine: {
     position: "absolute",
@@ -159,9 +221,7 @@ const ss = StyleSheet.create({
     fontWeight: "400",
     color: "black",
   },
-  mapContainer: {
-    flex: 1,
-  },
+
   title: {
     fontSize: 30,
     fontWeight: "800",
@@ -171,7 +231,6 @@ const ss = StyleSheet.create({
     fontSize: 26,
   },
   Header: {
-    // flex: 50,
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "baseline",
@@ -187,25 +246,21 @@ const ss = StyleSheet.create({
     marginTop: 10,
     fontSize: 20,
     padding: 20,
-    marginBottom: 20,
+    marginBottom: 15,
     backgroundColor: "#f6bd60",
   },
   content: {
     flex: 1,
-    marginTop: 12,
-    paddingHorizontal: 20,
   },
-
   inputBtnContainer: {
-    // flex: 1,
     flexDirection: "row",
-    justifyContent: "space-between",
+    justifyContent: "center",
   },
   thButton: {
     padding: 10,
     backgroundColor: "#f68e5f",
     borderRadius: 20,
-    width: 70,
+    width: 150,
   },
   textBtn: {
     color: "white",

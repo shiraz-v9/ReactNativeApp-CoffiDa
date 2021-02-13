@@ -55,7 +55,11 @@ class App extends Component {
               },
             }}
           />
-          <Stack.Screen name="locations" component={locations} />
+          <Stack.Screen
+            name="locations"
+            component={locations}
+            options={({ route }) => ({ title: route.params.name })}
+          />
           <Stack.Screen
             name="review"
             component={review}

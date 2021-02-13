@@ -74,22 +74,9 @@ class HomeScreen extends Component {
   tester = async () => {
     const token = await AsyncStorage.getItem("token");
     const id = await AsyncStorage.getItem("id");
-    console.log(
-      +id + " ID and TOKEN AS: " + token
-      // " --user data-- " +
-      //   this.state.userData +
-      //   " --locations -- " +
-      //   this.state.locations
-    );
+    console.log(+id + " ID and TOKEN AS: " + token);
   };
-  // fetchOnNavgigation() {
-  //   var x = this.props.route.params.fetch;
-  //   if (x !== null) {
-  //     console.log("fetching application...");
-  //     this.getLocation();
-  //     this.getUser;
-  //   } else console.log("no params yet");
-  // }
+
   getUser = async () => {
     const token = await AsyncStorage.getItem("token");
     const asID = await AsyncStorage.getItem("id");
@@ -130,34 +117,35 @@ class HomeScreen extends Component {
     }
 
     return (
-      <View>
+      <View style={ss.container}>
+        <Text style={ss.title}>
+          Welcome to CoffiDa mr {this.state.userData.last_name} 👋
+        </Text>
+        <Text>Leave reviews and find your favourite coffee place.</Text>
+        <FlatList
+          style={ss.flatList}
+          data={this.state.locations}
+          renderItem={({ item }) => (
+            <TouchableOpacity
+              onPress={() =>
+                this.props.navigation.navigate("locations", {
+                  item: item.location_id,
+                  name: item.location_name,
+                  fav: this.state.userData.favourite_locations,
+                })
+              }
+            >
+              <Text style={ss.text}>{item.location_name}</Text>
+            </TouchableOpacity>
+          )}
+          keyExtractor={(item) => item.location_id.toString()}
+        />
+
+        <Button title="logout" onPress={() => this.logOut()} />
+        <Button title="TEST" onPress={() => this.tester()} />
         {/* <Button title="signup" onPress={() => nav.navigate("signup")} />
         <Button title="login" onPress={() => nav.navigate("loginAsync")} />
         <Button title="locations" onPress={() => nav.navigate("locations")} /> */}
-        <View style={ss.container}>
-          <Text style={ss.title}>
-            Welcome to CoffiDa mr {this.state.userData.last_name} 👋
-          </Text>
-          <Text>Leave reviews and find your favourite coffee place.</Text>
-          <FlatList
-            style={ss.flatList}
-            data={this.state.locations}
-            renderItem={({ item }) => (
-              <TouchableOpacity
-                onPress={() =>
-                  this.props.navigation.navigate("locations", {
-                    item: item.location_id,
-                  })
-                }
-              >
-                <Text style={ss.text}>{item.location_name}</Text>
-              </TouchableOpacity>
-            )}
-            keyExtractor={(item) => item.location_id.toString()}
-          />
-        </View>
-        <Button title="logout" onPress={() => this.logOut()} />
-        <Button title="TEST" onPress={() => this.tester()} />
       </View>
     );
   }
@@ -166,20 +154,15 @@ class HomeScreen extends Component {
 export default HomeScreen;
 
 const ss = StyleSheet.create({
-  scrollView: {
-    backgroundColor: "white",
-  },
-  engine: {
-    position: "absolute",
-    right: 0,
-  },
   text: {
     fontSize: 24,
     fontWeight: "400",
     color: "black",
+    padding: 20,
   },
   container: {
-    marginTop: 32,
+    flex: 1,
+    marginTop: 20,
     paddingHorizontal: 24,
   },
   title: {
@@ -194,7 +177,6 @@ const ss = StyleSheet.create({
     color: "black",
   },
   bold: {
-    //add bold text
     fontWeight: "700",
   },
   footer: {
