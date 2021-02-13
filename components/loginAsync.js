@@ -23,9 +23,6 @@ class loginAsync extends Component {
     };
   }
 
-  setModalVisible = (visible) => {
-    this.setState({ modalVisible: visible });
-  };
   signedInUser = async () => {
     const value = await AsyncStorage.getItem("token");
     if (value !== null) {
@@ -34,8 +31,9 @@ class loginAsync extends Component {
   };
   loggedInCoffiDa = async (data) => {
     try {
-      await AsyncStorage.setItem("token", data.token); //passing id with token togetherdata.id +
-      this.props.navigation.navigate("Home", data);
+      await AsyncStorage.setItem("token", data.token);
+      await AsyncStorage.setItem("id", JSON.stringify(data.id));
+      this.props.navigation.navigate("Home");
     } catch (error) {
       console.log(error);
     }
@@ -47,19 +45,17 @@ class loginAsync extends Component {
   checkJSON = async () => {
     //TESTING ONLY⚡⚠
     const value = await AsyncStorage.getItem("token");
-    // const x = this.props.navigation.getParam("name");
-    // var { name, age, city } = this.props.route.params;
-    // if (this.props.route.params == undefined || null) {
-    //   alert("undefineddd");
-    // } else {
-    //   alert(
-    //     " -- " +
-    //       this.props.route.params.name +
-    //       this.props.route.params.city +
-    //       this.props.route.params.age
-    //   );
-    // }
-    alert("here" + this.state.email + this.state.password + "token " + value);
+    const id = await AsyncStorage.getItem("id");
+
+    console.log(
+      "here- " +
+        this.state.email +
+        this.state.password +
+        "token " +
+        value +
+        " id " +
+        id
+    );
   };
 
   // didUserSignUp() { // AUTO sign in - WILL impolemented later!! ⚡⚡ Put this in render aswell
@@ -89,7 +85,8 @@ class loginAsync extends Component {
     })
       .then((response) => response.json())
       .then((data) => {
-        alert("Welcome back you have logged in with token " + data.token);
+        // alert("Welcome back you have logged in with token " + data.token);
+        console.log("Welcome back you have logged in with token " + data.token);
         this.setState({
           token: data,
         });
@@ -98,7 +95,7 @@ class loginAsync extends Component {
       })
 
       .catch((error) => {
-        alert(error);
+        // alert(error);
         console.log(error);
       });
   }

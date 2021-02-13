@@ -24,6 +24,7 @@ class HomeScreen extends Component {
 
   logOut = async () => {
     const token = await AsyncStorage.getItem("token");
+    const id = await AsyncStorage.getItem("id");
     fetch("http://10.0.2.2:3333/api/1.0.0/user/logout", {
       method: "POST",
       headers: { "X-Authorization": token },
@@ -31,8 +32,7 @@ class HomeScreen extends Component {
       .then((response) => {
         if (response.ok) {
           AsyncStorage.clear();
-          alert("logged out");
-          console.log("logged out..." + AsyncStorage.getItem("token"));
+          console.log("logged out... deleting token: " + token + " id - " + id);
           this.notSignedIn();
         }
       })
@@ -47,6 +47,7 @@ class HomeScreen extends Component {
     const value = await AsyncStorage.getItem("token");
     if (value == null) {
       this.props.navigation.navigate("loginAsync");
+      console.log("deleted!");
     }
   };
 
@@ -70,21 +71,32 @@ class HomeScreen extends Component {
         console.log(error);
       });
   };
-  tester() {
-    alert(
-      this.state.id +
-        " --user data-- " +
-        this.state.userData +
-        " --locations -- " +
-        this.state.locations
+  tester = async () => {
+    const token = await AsyncStorage.getItem("token");
+    const id = await AsyncStorage.getItem("id");
+    console.log(
+      +id + " ID and TOKEN AS: " + token
+      // " --user data-- " +
+      //   this.state.userData +
+      //   " --locations -- " +
+      //   this.state.locations
     );
-  }
+  };
+  // fetchOnNavgigation() {
+  //   var x = this.props.route.params.fetch;
+  //   if (x !== null) {
+  //     console.log("fetching application...");
+  //     this.getLocation();
+  //     this.getUser;
+  //   } else console.log("no params yet");
+  // }
   getUser = async () => {
     const token = await AsyncStorage.getItem("token");
+    const asID = await AsyncStorage.getItem("id");
     this.setState({
-      id: this.props.route.params.id,
+      id: asID,
     });
-    fetch("http://10.0.2.2:3333/api/1.0.0/user/" + this.state.id, {
+    fetch("http://10.0.2.2:3333/api/1.0.0/user/" + asID, {
       headers: {
         Accept: "application/json",
         "X-Authorization": token,
@@ -109,34 +121,39 @@ class HomeScreen extends Component {
   }
 
   render() {
-    const nav = this.props.navigation;
     if (this.state.isLoading) {
       return (
         <View>
-          <ActivityIndicator />
+          <ActivityIndicator size="large" color="#f4a261" />
         </View>
       );
     }
 
     return (
       <View>
-        <Button title="signup" onPress={() => nav.navigate("signup")} />
+        {/* <Button title="signup" onPress={() => nav.navigate("signup")} />
         <Button title="login" onPress={() => nav.navigate("loginAsync")} />
-        <Button title="locations" onPress={() => nav.navigate("locations")} />
+        <Button title="locations" onPress={() => nav.navigate("locations")} /> */}
         <View style={ss.container}>
           <Text style={ss.title}>
-            Welcome to CoffiDa mr {this.state.userData.last_name}
+            Welcome to CoffiDa mr {this.state.userData.last_name} 👋
           </Text>
           <Text>Leave reviews and find your favourite coffee place.</Text>
           <FlatList
             style={ss.flatList}
             data={this.state.locations}
             renderItem={({ item }) => (
-              <TouchableOpacity onPress={() => nav.navigate("locations", item)}>
+              <TouchableOpacity
+                onPress={() =>
+                  this.props.navigation.navigate("locations", {
+                    item: item.location_id,
+                  })
+                }
+              >
                 <Text style={ss.text}>{item.location_name}</Text>
               </TouchableOpacity>
             )}
-            keyExtractor={(itemid) => itemid.location_id}
+            keyExtractor={(item) => item.location_id.toString()}
           />
         </View>
         <Button title="logout" onPress={() => this.logOut()} />

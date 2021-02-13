@@ -23,6 +23,14 @@ class review extends Component {
       review: "",
     };
   }
+  componentDidMount() {
+    this.changeTitle();
+  }
+  changeTitle() {
+    this.props.navigation.setOptions({
+      title: "Review " + this.props.route.params.location, //change the title
+    });
+  }
 
   leaveReview = async () => {
     const token = await AsyncStorage.getItem("token");
@@ -53,8 +61,8 @@ class review extends Component {
     })
       .then((response) => {
         if (response.ok) {
+          this.props.navigation.navigate("Home");
           console.log("SUCCESS 200 OK...");
-          this.props.navigation.navigate("locations");
         } else {
           console.log("error 401");
         }

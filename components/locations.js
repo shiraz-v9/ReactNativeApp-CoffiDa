@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import {
   Text,
   View,
@@ -18,54 +19,84 @@ class locations extends Component {
 
     this.state = {
       coffeeDeets: [],
-      latitude: "",
-      longitude: "",
+      isLoading: true,
     };
   }
-  componentDidMount() {}
-
+  getLocationID = async () => {
+    const id = this.props.route.params.item;
+    const token = await AsyncStorage.getItem("token");
+    fetch("http://10.0.2.2:3333/api/1.0.0/location/" + id, {
+      headers: {
+        Accept: "application/json",
+        "X-Authorization": token,
+      },
+    })
+      .then((response) => response.json())
+      .then((responseJson) => {
+        this.setState({
+          isLoading: false,
+          coffeeDeets: responseJson,
+        });
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  };
+  componentDidMount() {
+    this.getLocationID();
+  }
   render() {
+    if (this.state.isLoading) {
+      return (
+        <View>
+          <ActivityIndicator size="large" color="#f4a261" />
+        </View>
+      );
+    }
     return (
-      <View style={ss.mapContainer}>
+      <View style={ss.content}>
         <MapView
           provider={PROVIDER_GOOGLE}
           style={ss.mapContainer}
           region={{
-            latitude: 53.460051,
-            longitude: -2.276625,
-            latitudeDelta: 0.09,
-            longitudeDelta: 0.035,
+            latitude: this.state.coffeeDeets.latitude,
+            longitude: this.state.coffeeDeets.longitude,
+            latitudeDelta: 0.5,
+            longitudeDelta: 0.5,
           }}
         >
           <Marker
-            coordinate={{ latitude: 53.460051, longitude: -2.276625 }}
-            title="My Location!"
-            description="I am here"
+            coordinate={{
+              latitude: this.state.coffeeDeets.latitude,
+              longitude: this.state.coffeeDeets.longitude,
+            }}
+            title={this.state.coffeeDeets.location_name}
+            description="Come and find Us!"
           />
         </MapView>
         <ScrollView>
-          <View style={ss.content}>
+          <View style={ss.scrollView}>
             <View style={ss.Header}>
               <Text style={ss.title}>
                 {""}
-                {this.props.route.params.location_name}
+                {this.state.coffeeDeets.location_name}
               </Text>
               <Text style={ss.text}>
                 {""}
-                {this.props.route.params.location_town}
+                {this.state.coffeeDeets.location_town}
               </Text>
             </View>
             <Text style={ss.text}>
-              Overall Rating: {this.props.route.params.avg_overall_rating}
+              Overall Rating: {this.state.coffeeDeets.avg_overall_rating}
             </Text>
             <Text style={ss.text}>
-              Price: {this.props.route.params.avg_price_rating}
+              Price: {this.state.coffeeDeets.avg_price_rating}
             </Text>
             <Text style={ss.text}>
-              Quality: {this.props.route.params.avg_quality_rating}
+              Quality: {this.state.coffeeDeets.avg_quality_rating}
             </Text>
             <Text style={ss.text}>
-              Cleanliness: {this.props.route.params.avg_clenliness_rating}
+              Cleanliness: {this.state.coffeeDeets.avg_clenliness_rating}
             </Text>
 
             <Text style={ss.title}> Location reviews:</Text>
@@ -81,18 +112,18 @@ class locations extends Component {
                 style={ss.thButton}
                 onPress={() =>
                   this.props.navigation.navigate("review", {
-                    id: this.props.route.params.location_id,
-                    location: this.props.route.params.location_name,
+                    id: this.state.coffeeDeets.location_id,
+                    location: this.state.coffeeDeets.location_name,
                   })
                 }
                 underlayColor="#fff"
               >
                 <View>
-                  <Text style={ss.textBtn}> --> </Text>
+                  <Text style={ss.textBtn}> -- </Text>
                 </View>
               </TouchableHighlight>
             </View>
-            {this.props.route.params.location_reviews.map((item, i) => {
+            {this.state.coffeeDeets.location_reviews.map((item, i) => {
               return (
                 <Text style={ss.comment} key={i}>
                   {item.review_body} - Rating {item.review_overallrating} -
@@ -117,7 +148,7 @@ export default locations;
 
 const ss = StyleSheet.create({
   scrollView: {
-    backgroundColor: "white",
+    flex: 2,
   },
   engine: {
     position: "absolute",
@@ -140,6 +171,7 @@ const ss = StyleSheet.create({
     fontSize: 26,
   },
   Header: {
+    // flex: 50,
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "baseline",
@@ -165,7 +197,7 @@ const ss = StyleSheet.create({
   },
 
   inputBtnContainer: {
-    flex: 1,
+    // flex: 1,
     flexDirection: "row",
     justifyContent: "space-between",
   },

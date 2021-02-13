@@ -26,19 +26,41 @@ class App extends Component {
     return (
       <NavigationContainer>
         <Stack.Navigator>
+          <Stack.Screen name="Home" component={HomeScreen} />
           <Stack.Screen // moving this here so I make sure it's the first thing user sees.
             name="loginAsync"
             component={loginAsync}
-            options={{ title: "Welcome" }}
+            options={{
+              title: "Welcome!",
+              headerStyle: {
+                backgroundColor: "#f4511e",
+              },
+              headerTintColor: "#fff",
+              headerTitleStyle: {
+                fontWeight: "bold",
+              },
+            }}
           />
-          <Stack.Screen name="Home" component={HomeScreen} />
           <Stack.Screen
             name="signup"
             component={signup}
-            options={{ title: "Create your Account" }}
+            options={{
+              title: "Create Your account",
+              headerStyle: {
+                backgroundColor: "#f4511e",
+              },
+              headerTintColor: "#fff",
+              headerTitleStyle: {
+                fontWeight: "bold",
+              },
+            }}
           />
           <Stack.Screen name="locations" component={locations} />
-          <Stack.Screen name="review" component={review} />
+          <Stack.Screen
+            name="review"
+            component={review}
+            options={({ route }) => ({ title: route.params.location_name })}
+          />
         </Stack.Navigator>
       </NavigationContainer>
     );
