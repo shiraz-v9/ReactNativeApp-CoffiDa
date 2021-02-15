@@ -7,6 +7,7 @@ import {
   View,
   Button,
   StyleSheet,
+  TouchableHighlight,
 } from "react-native";
 
 import { ScrollView, TouchableOpacity } from "react-native-gesture-handler";
@@ -98,9 +99,9 @@ class HomeScreen extends Component {
       })
       .catch((error) => {
         console.log(error);
-        alert("Unauthorised/ wrong token. LogOut and try again");
       });
   };
+
   componentDidMount() {
     this.notSignedIn();
     this.getUser();
@@ -118,8 +119,18 @@ class HomeScreen extends Component {
 
     return (
       <View style={ss.container}>
-        <Text style={ss.title}>
-          Welcome to CoffiDa mr {this.state.userData.last_name} 👋
+        <Text>
+          <TouchableHighlight
+            // style={ss.thButton}
+            onPress={() => this.props.navigation.navigate("Profile")} //RUN FUNCTION
+            underlayColor="#fff"
+          >
+            <View>
+              <Text style={ss.title}>
+                Welcome to CoffiDa mr {this.state.userData.last_name} 👋
+              </Text>
+            </View>
+          </TouchableHighlight>
         </Text>
         <Text>Leave reviews and find your favourite coffee place.</Text>
         <FlatList

@@ -19,6 +19,7 @@ class locations extends Component {
 
     this.state = {
       coffeeDeets: [],
+      userFavourites: [],
       isLoading: true,
       heartColour: "",
     };
@@ -30,7 +31,18 @@ class locations extends Component {
   }
 
   likeFunction() {
-    console.log("data " + this.props.route.params.fav.location_name);
+    if (
+      this.state.userFavourites.location_name == this.props.route.params.name
+    ) {
+      this.setState({
+        heartColour: "❤",
+      });
+    } else {
+      this.setState({
+        heartColour: "🤍",
+      });
+    }
+    console.log("like function working " + this.props.route.params.name);
   }
 
   getLocationID = async () => {
@@ -47,8 +59,33 @@ class locations extends Component {
         this.setState({
           isLoading: false,
           coffeeDeets: responseJson,
-          heartColour: "🤍",
         });
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  };
+
+  getUserFavourite = async () => {
+    //this is used for the like unlike location feature!
+    const token = await AsyncStorage.getItem("token");
+    const asID = await AsyncStorage.getItem("id");
+    this.setState({
+      id: asID,
+    });
+    fetch("http://10.0.2.2:3333/api/1.0.0/user/" + asID, {
+      headers: {
+        Accept: "application/json",
+        "X-Authorization": token,
+      },
+    })
+      .then((response) => response.json())
+      .then((responseJson) => {
+        this.setState({
+          userFavourites: responseJson.favourite_locations,
+        });
+        console.log("getUserFavourite 200 OK");
+        this.likeFunction();
       })
       .catch((error) => {
         console.log(error);
@@ -108,7 +145,7 @@ class locations extends Component {
   componentDidMount() {
     this.getLocationID();
     this.changeTitle();
-    this.likeFunction();
+    this.getUserFavourite();
   }
   render() {
     if (this.state.isLoading) {
@@ -193,10 +230,6 @@ class locations extends Component {
                   Cleanliness - {item.clenliness_rating} - {item.likes} Likes
                 </Text>
               );
-              // this.setState({
-              //   latitude: "d",
-              //   longitude: "s",
-              // });
             })}
           </ScrollView>
         </View>

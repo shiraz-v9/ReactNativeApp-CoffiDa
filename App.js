@@ -18,6 +18,8 @@ import signup from "./components/signup";
 import loginAsync from "./components/loginAsync";
 import locations from "./components/locations";
 import review from "./components/review";
+import Profile from "./components/profile";
+import Update from "./components/updateUser";
 
 class App extends Component {
   render() {
@@ -41,6 +43,8 @@ class App extends Component {
               },
             }}
           />
+          <Stack.Screen name="Profile" component={Profile} />
+          <Stack.Screen name="Update" component={Update} />
           <Stack.Screen
             name="signup"
             component={signup}
