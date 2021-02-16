@@ -6,6 +6,8 @@ import {
   StyleSheet,
   ActivityIndicator,
   TouchableOpacity,
+  FlatList,
+  Button,
   TouchableHighlight,
 } from "react-native";
 import { ScrollView } from "react-native-gesture-handler";
@@ -21,7 +23,9 @@ class locations extends Component {
       coffeeDeets: [],
       userFavourites: [],
       isLoading: true,
-      heartColour: "",
+      heartColour: "🤍",
+      favList: [],
+      comments: [],
     };
   }
   changeTitle() {
@@ -31,18 +35,31 @@ class locations extends Component {
   }
 
   likeFunction() {
-    if (
-      this.state.userFavourites.location_name == this.props.route.params.name
+    var name;
+    var i;
+
+    for (
+      i = 0;
+      i < Object.keys(this.state.userFavourites.favourite_locations).length;
+      i++
     ) {
-      this.setState({
-        heartColour: "❤",
-      });
-    } else {
-      this.setState({
-        heartColour: "🤍",
-      });
+      const location = this.state.userFavourites.favourite_locations[i];
+      name = location.location_name;
+      this.state.favList.push(name);
+      // console.log("returned--  " + this.state.favList[i]);
+      if (this.state.favList[i] == this.props.route.params.name) {
+        this.setState({
+          heartColour: "❤",
+          liked: true,
+        });
+      }
+      // else if (this.state.favList[i] != this.props.route.params.name)
+      // {
+      //   this.setState({
+      //     heartColour: "🤍",
+      //   });
+      // }
     }
-    console.log("like function working " + this.props.route.params.name);
   }
 
   getLocationID = async () => {
@@ -59,6 +76,7 @@ class locations extends Component {
         this.setState({
           isLoading: false,
           coffeeDeets: responseJson,
+          comments: responseJson.location_reviews,
         });
       })
       .catch((error) => {
@@ -70,9 +88,7 @@ class locations extends Component {
     //this is used for the like unlike location feature!
     const token = await AsyncStorage.getItem("token");
     const asID = await AsyncStorage.getItem("id");
-    this.setState({
-      id: asID,
-    });
+
     fetch("http://10.0.2.2:3333/api/1.0.0/user/" + asID, {
       headers: {
         Accept: "application/json",
@@ -82,7 +98,7 @@ class locations extends Component {
       .then((response) => response.json())
       .then((responseJson) => {
         this.setState({
-          userFavourites: responseJson.favourite_locations,
+          userFavourites: responseJson,
         });
         console.log("getUserFavourite 200 OK");
         this.likeFunction();
@@ -142,6 +158,10 @@ class locations extends Component {
       });
   };
 
+  likeComments() {
+    console.log("hello ");
+  }
+
   componentDidMount() {
     this.getLocationID();
     this.changeTitle();
@@ -176,35 +196,29 @@ class locations extends Component {
             description="Come and find Us!"
           />
         </MapView>
-        <View style={ss.scrollView}>
-          <ScrollView>
-            <View style={ss.Header}>
-              <Text style={ss.title}>
-                {""}
-                {this.state.coffeeDeets.location_name}
-              </Text>
-              <Text style={ss.text}>
-                {""}
-                {this.state.coffeeDeets.location_town}
-              </Text>
-              <TouchableOpacity onPress={() => this.favouriteLocation()}>
-                <Text style={ss.title}>{this.state.heartColour}</Text>
-              </TouchableOpacity>
-            </View>
-            <Text style={ss.text}>
-              Overall Rating: {this.state.coffeeDeets.avg_overall_rating}
-            </Text>
-            <Text style={ss.text}>
-              Price: {this.state.coffeeDeets.avg_price_rating}
-            </Text>
-            <Text style={ss.text}>
-              Quality: {this.state.coffeeDeets.avg_quality_rating}
-            </Text>
-            <Text style={ss.text}>
-              Cleanliness: {this.state.coffeeDeets.avg_clenliness_rating}
-            </Text>
 
-            <Text style={ss.title}> Location reviews:</Text>
+        <View style={ss.scrollView}>
+          <View style={ss.Header}>
+            <TouchableOpacity onPress={() => this.favouriteLocation()}>
+              <Text style={ss.title}>{this.state.heartColour}</Text>
+            </TouchableOpacity>
+            <Text style={ss.title}>{this.state.coffeeDeets.location_name}</Text>
+            <Text style={ss.text}>{this.state.coffeeDeets.location_town}</Text>
+          </View>
+          <Text style={ss.text}>
+            Overall Rating: {this.state.coffeeDeets.avg_overall_rating}
+          </Text>
+          <Text style={ss.text}>
+            Price: {this.state.coffeeDeets.avg_price_rating}
+          </Text>
+          <Text style={ss.text}>
+            Quality: {this.state.coffeeDeets.avg_quality_rating}
+          </Text>
+          <Text style={ss.text}>
+            Cleanliness: {this.state.coffeeDeets.avg_clenliness_rating}
+          </Text>
+          <View style={ss.sub}>
+            <Text style={ss.title}>Reviews</Text>
             {/*⚡ --> Post Comment Section */}
             <View style={ss.inputBtnContainer}>
               <TouchableHighlight
@@ -222,16 +236,24 @@ class locations extends Component {
                 </View>
               </TouchableHighlight>
             </View>
-            {this.state.coffeeDeets.location_reviews.map((item, i) => {
-              return (
-                <Text style={ss.comment} key={i}>
-                  {item.review_body} - Rating {item.overall_rating} - Price{" "}
-                  {item.price_rating} - Quality {item.quality_rating} -
-                  Cleanliness - {item.clenliness_rating} - {item.likes} Likes
+          </View>
+          <FlatList
+            data={this.state.comments}
+            renderItem={({ item }) => (
+              <View style={ss.comment}>
+                <Text style={ss.flatList}>{item.review_body}</Text>
+                <Text style={ss.flatList}>
+                  ⭐{item.overall_rating} 💲{item.price_rating} 🍽
+                  {item.quality_rating} 🧹{item.clenliness_rating} 👍
+                  {item.likes}
                 </Text>
-              );
-            })}
-          </ScrollView>
+
+                <Button onPress={() => this.likeComments()} title="Like" />
+              </View>
+            )}
+            keyExtractor={(item) => item.review_id.toString()}
+            extraData={this.state.comments}
+          />
         </View>
       </View>
     );
@@ -250,7 +272,7 @@ const ss = StyleSheet.create({
     right: 0,
   },
   text: {
-    fontSize: 20,
+    fontSize: 22,
     fontWeight: "400",
     color: "black",
   },
@@ -261,7 +283,9 @@ const ss = StyleSheet.create({
     color: "black",
   },
   sub: {
-    fontSize: 26,
+    flexDirection: "row",
+    justifyContent: "space-evenly",
+    // alignItems: "baseline",
   },
   Header: {
     flexDirection: "row",
@@ -270,15 +294,13 @@ const ss = StyleSheet.create({
     paddingBottom: 10,
   },
   flatList: {
-    marginTop: 20,
-    fontSize: 40,
-    fontWeight: "400",
-    color: "black",
+    fontSize: 20,
+    textAlign: "center",
   },
   comment: {
     marginTop: 10,
     fontSize: 20,
-    padding: 20,
+    padding: 10,
     marginBottom: 15,
     backgroundColor: "#f6bd60",
   },

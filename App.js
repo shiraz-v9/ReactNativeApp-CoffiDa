@@ -28,7 +28,6 @@ class App extends Component {
     return (
       <NavigationContainer>
         <Stack.Navigator>
-          <Stack.Screen name="Home" component={HomeScreen} />
           <Stack.Screen // moving this here so I make sure it's the first thing user sees.
             name="loginAsync"
             component={loginAsync}
@@ -43,6 +42,7 @@ class App extends Component {
               },
             }}
           />
+          <Stack.Screen name="Home" component={HomeScreen} />
           <Stack.Screen name="Profile" component={Profile} />
           <Stack.Screen name="Update" component={Update} />
           <Stack.Screen

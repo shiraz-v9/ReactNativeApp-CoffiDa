@@ -16,10 +16,9 @@ class HomeScreen extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      isLoading: true,
+      // isLoading: true,
       userData: [],
       locations: [],
-      id: "",
     };
   }
 
@@ -32,8 +31,18 @@ class HomeScreen extends Component {
     })
       .then((response) => {
         if (response.ok) {
+          this.setState({
+            // isLoading: true,
+            userData: [],
+            locations: [],
+          });
           AsyncStorage.clear();
-          console.log("logged out... deleting token: " + token + " id - " + id);
+          console.log(
+            " Clearing state, logging out... deleting token: " +
+              token +
+              " id - " +
+              id
+          );
           this.notSignedIn();
         }
       })
@@ -75,15 +84,13 @@ class HomeScreen extends Component {
   tester = async () => {
     const token = await AsyncStorage.getItem("token");
     const id = await AsyncStorage.getItem("id");
-    console.log(+id + " ID and TOKEN AS: " + token);
+    console.log(id + " ID and TOKEN AS: " + token);
   };
 
   getUser = async () => {
     const token = await AsyncStorage.getItem("token");
     const asID = await AsyncStorage.getItem("id");
-    this.setState({
-      id: asID,
-    });
+
     fetch("http://10.0.2.2:3333/api/1.0.0/user/" + asID, {
       headers: {
         Accept: "application/json",
@@ -93,7 +100,6 @@ class HomeScreen extends Component {
       .then((response) => response.json())
       .then((responseJson) => {
         this.setState({
-          isLoading: false,
           userData: responseJson,
         });
       })
@@ -103,20 +109,18 @@ class HomeScreen extends Component {
   };
 
   componentDidMount() {
-    this.notSignedIn();
     this.getUser();
     this.getLocation();
   }
 
   render() {
-    if (this.state.isLoading) {
-      return (
-        <View>
-          <ActivityIndicator size="large" color="#f4a261" />
-        </View>
-      );
-    }
-
+    // if (this.state.isLoading) {
+    //   return (
+    //     <View>
+    //       <ActivityIndicator size="large" color="#f4a261" />
+    //     </View>
+    //   );
+    // } else {
     return (
       <View style={ss.container}>
         <Text>
@@ -160,6 +164,7 @@ class HomeScreen extends Component {
       </View>
     );
   }
+  // }
 }
 
 export default HomeScreen;
