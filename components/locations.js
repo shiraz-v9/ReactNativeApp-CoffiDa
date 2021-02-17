@@ -9,6 +9,7 @@ import {
   FlatList,
   Button,
   TouchableHighlight,
+  Image,
 } from "react-native";
 import { ScrollView } from "react-native-gesture-handler";
 import MapView, { PROVIDER_GOOGLE, Marker } from "react-native-maps";
@@ -26,6 +27,8 @@ class locations extends Component {
       heartColour: "🤍",
       favList: [],
       comments: [],
+      photos: [],
+      deleteBtn: "",
     };
   }
   changeTitle() {
@@ -80,7 +83,7 @@ class locations extends Component {
         });
       })
       .catch((error) => {
-        console.log(error);
+        console.error(error);
       });
   };
 
@@ -104,7 +107,7 @@ class locations extends Component {
         this.likeFunction();
       })
       .catch((error) => {
-        console.log(error);
+        console.error("getUserFavourite() " + error);
       });
   };
 
@@ -131,7 +134,7 @@ class locations extends Component {
         }
       })
       .catch((error) => {
-        console.log(error);
+        console.error("favouriteLocation() " + error);
       });
   };
   unFavouriteLocation = async () => {
@@ -154,18 +157,104 @@ class locations extends Component {
         }
       })
       .catch((error) => {
-        console.log(error);
+        console.log("unFavouriteLocation() " + error);
       });
   };
 
-  likeComments() {
-    console.log("hello ");
-  }
+  // getPhoto = async () => {
+  //   const token = await AsyncStorage.getItem("token");
+  //   const locID = this.props.route.params.item;
+
+  //   fetch(
+  //     "http://localhost:3333/api/1.0.0/location/" +
+  //       locID +
+  //       "/review/" +
+  //       2 +
+  //       "/photo",
+  //     {
+  //       headers: {
+  //         Accept: "image/jpeg",
+  //       },
+  //     }
+  //   )
+  //     .then((response) => response.blob())
+  //     .then((images) => {
+  //       this.setState({
+  //         photos: images,
+  //       });
+  //     })
+
+  //     .catch((error) => {
+  //       console.error("getPhoto()" + error);
+  //     });
+  // };
+
+  likeComments = async (revID) => {
+    const token = await AsyncStorage.getItem("token");
+    const id = this.props.route.params.item;
+    // console.log("hi " + revID + " location " + id); //test
+    fetch(
+      "http://10.0.2.2:3333/api/1.0.0/location/" +
+        id +
+        "/review/" +
+        revID +
+        "/like",
+      {
+        method: "POST",
+        headers: { "X-Authorization": token },
+      }
+    )
+      .then((response) => {
+        if (response.ok) {
+          console.log("Comment Liked");
+          this.getLocationID(); //refresh
+        }
+      })
+
+      .catch((error) => {
+        console.log("likecomment() " + error);
+      });
+  };
+  dislikeComments = async (revID) => {
+    const token = await AsyncStorage.getItem("token");
+    const id = this.props.route.params.item;
+    // console.log("hi " + revID + " location " + id); //test
+    fetch(
+      "http://10.0.2.2:3333/api/1.0.0/location/" +
+        id +
+        "/review/" +
+        revID +
+        "/like",
+      {
+        method: "DELETE",
+        headers: { "X-Authorization": token },
+      }
+    )
+      .then((response) => {
+        if (response.ok) {
+          console.log("Like Removed!");
+          this.getLocationID(); //refresh
+        }
+      })
+
+      .catch((error) => {
+        console.log("dislikeComments() " + error);
+      });
+  };
+
+  isReviewMine = async (commentID) => {
+    const myID = await AsyncStorage.getItem("id");
+    if (commentID == myID) {
+      this.setState({ deleteBtn: "❌" });
+    }
+  };
 
   componentDidMount() {
     this.getLocationID();
     this.changeTitle();
     this.getUserFavourite();
+    this.isReviewMine();
+    // this.getPhoto();
   }
   render() {
     if (this.state.isLoading) {
@@ -237,6 +326,13 @@ class locations extends Component {
               </TouchableHighlight>
             </View>
           </View>
+          {/* <Text style={ss.title}>Photos</Text>
+          <Image
+            style={ss.tinyLogo}
+            source={{
+              uri: "https://reactnative.dev/img/tiny_logo.png",
+            }}
+          /> */}
           <FlatList
             data={this.state.comments}
             renderItem={({ item }) => (
@@ -244,11 +340,32 @@ class locations extends Component {
                 <Text style={ss.flatList}>{item.review_body}</Text>
                 <Text style={ss.flatList}>
                   ⭐{item.overall_rating} 💲{item.price_rating} 🍽
-                  {item.quality_rating} 🧹{item.clenliness_rating} 👍
-                  {item.likes}
+                  {item.quality_rating} 🧹{item.clenliness_rating}{" "}
                 </Text>
-
-                <Button onPress={() => this.likeComments()} title="Like" />
+                <View style={ss.inputBtnContainer}>
+                  {/* BUTTON VIEW ⚠ */}
+                  <Text style={ss.text}>
+                    👍
+                    {item.likes}
+                  </Text>
+                  <Button
+                    onPress={() => this.likeComments(item.review_id)}
+                    title="👍"
+                  />
+                  <Button
+                    onPress={() => this.dislikeComments(item.review_id)}
+                    title="👎"
+                  />
+                  <TouchableHighlight
+                    // style={ss.thButton}
+                    onPress={() => this.isReviewMine(item.review_id)}
+                    underlayColor="#fff"
+                  >
+                    <View>
+                      <Text style={ss.textBtn}> {this.state.deleteBtn} </Text>
+                    </View>
+                  </TouchableHighlight>
+                </View>
               </View>
             )}
             keyExtractor={(item) => item.review_id.toString()}
@@ -272,13 +389,13 @@ const ss = StyleSheet.create({
     right: 0,
   },
   text: {
-    fontSize: 22,
+    fontSize: 18,
     fontWeight: "400",
     color: "black",
   },
 
   title: {
-    fontSize: 30,
+    fontSize: 25,
     fontWeight: "800",
     color: "black",
   },
@@ -286,6 +403,10 @@ const ss = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "space-evenly",
     // alignItems: "baseline",
+  },
+  tinyLogo: {
+    width: 50,
+    height: 50,
   },
   Header: {
     flexDirection: "row",
@@ -302,14 +423,15 @@ const ss = StyleSheet.create({
     fontSize: 20,
     padding: 10,
     marginBottom: 15,
-    backgroundColor: "#f6bd60",
+    backgroundColor: "#e7ecef",
   },
   content: {
     flex: 1,
   },
   inputBtnContainer: {
     flexDirection: "row",
-    justifyContent: "center",
+    justifyContent: "space-evenly",
+    alignItems: "baseline",
   },
   thButton: {
     padding: 10,

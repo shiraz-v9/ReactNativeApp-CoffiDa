@@ -3,6 +3,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import {
   FlatList,
   ActivityIndicator,
+  TextInput,
   Text,
   View,
   Button,
@@ -19,6 +20,7 @@ class HomeScreen extends Component {
       // isLoading: true,
       userData: [],
       locations: [],
+      q: "",
     };
   }
 
@@ -60,11 +62,19 @@ class HomeScreen extends Component {
       console.log("deleted!");
     }
   };
+  search() {
+    var url = "http://10.0.2.2:3333/api/1.0.0/find";
 
-  getLocation = async () => {
+    if (this.state.q != "") {
+      url += "?q=" + this.state.q + "&";
+    }
+    this.getLocation(url);
+  }
+
+  getLocation = async (url) => {
     const token = await AsyncStorage.getItem("token");
 
-    fetch("http://10.0.2.2:3333/api/1.0.0/find", {
+    fetch(url, {
       headers: {
         Accept: "application/json",
         "X-Authorization": token,
@@ -78,7 +88,7 @@ class HomeScreen extends Component {
         });
       })
       .catch((error) => {
-        console.log(error);
+        console.warn("getLocation() " + error);
       });
   };
   tester = async () => {
@@ -111,6 +121,7 @@ class HomeScreen extends Component {
   componentDidMount() {
     this.getUser();
     this.getLocation();
+    this.search();
   }
 
   render() {
@@ -137,6 +148,13 @@ class HomeScreen extends Component {
           </TouchableHighlight>
         </Text>
         <Text>Leave reviews and find your favourite coffee place.</Text>
+        <TextInput
+          placeholder="Query"
+          onChangeText={(q) => this.setState({ q })}
+          value={this.setState.q}
+        />
+        <Button onPress={() => this.search()} title="Search" />
+
         <FlatList
           style={ss.flatList}
           data={this.state.locations}
