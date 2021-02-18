@@ -5,6 +5,7 @@ import {
   View,
   StyleSheet,
   ActivityIndicator,
+  ToastAndroid,
   TextInput,
   TouchableHighlight,
 } from "react-native";
@@ -63,6 +64,7 @@ class review extends Component {
         if (response.ok) {
           this.props.navigation.navigate("Home");
           console.log("SUCCESS 200 OK...");
+          ToastAndroid.show("Review posted", ToastAndroid.SHORT);
         } else {
           console.log("error 401");
         }

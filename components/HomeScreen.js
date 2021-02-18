@@ -11,7 +11,7 @@ import {
   TouchableHighlight,
 } from "react-native";
 
-import { ScrollView, TouchableOpacity } from "react-native-gesture-handler";
+import { TouchableOpacity } from "react-native-gesture-handler";
 
 class HomeScreen extends Component {
   constructor(props) {
@@ -88,7 +88,7 @@ class HomeScreen extends Component {
         });
       })
       .catch((error) => {
-        console.warn("getLocation() " + error);
+        console.log("getLocation() " + error);
       });
   };
   tester = async () => {
@@ -174,11 +174,27 @@ class HomeScreen extends Component {
           keyExtractor={(item) => item.location_id.toString()}
         />
 
-        <Button title="logout" onPress={() => this.logOut()} />
-        <Button title="TEST" onPress={() => this.tester()} />
-        {/* <Button title="signup" onPress={() => nav.navigate("signup")} />
-        <Button title="login" onPress={() => nav.navigate("loginAsync")} />
-        <Button title="locations" onPress={() => nav.navigate("locations")} /> */}
+        <View style={ss.btnContainer}>
+          <TouchableHighlight
+            style={ss.thButton}
+            onPress={() => this.logOut()}
+            underlayColor="#fff"
+          >
+            <View>
+              <Text style={ss.btnText}>Logout</Text>
+            </View>
+          </TouchableHighlight>
+
+          <TouchableHighlight
+            style={ss.thButton}
+            onPress={() => this.tester()}
+            underlayColor="#fff"
+          >
+            <View>
+              <Text style={ss.btnText}>Test</Text>
+            </View>
+          </TouchableHighlight>
+        </View>
       </View>
     );
   }
@@ -189,7 +205,7 @@ export default HomeScreen;
 
 const ss = StyleSheet.create({
   text: {
-    fontSize: 24,
+    fontSize: 18,
     fontWeight: "400",
     color: "black",
     padding: 20,
@@ -205,10 +221,10 @@ const ss = StyleSheet.create({
     color: "black",
   },
   flatList: {
-    marginTop: 20,
-    fontSize: 40,
-    fontWeight: "400",
-    color: "black",
+    marginTop: 10,
+    padding: 10,
+    backgroundColor: "#e7ecef",
+    paddingBottom: 10,
   },
   bold: {
     fontWeight: "700",
@@ -220,5 +236,20 @@ const ss = StyleSheet.create({
     padding: 4,
     paddingRight: 12,
     textAlign: "right",
+  },
+  btnContainer: {
+    flexDirection: "row",
+    justifyContent: "space-evenly",
+  },
+  thButton: {
+    padding: 10,
+    backgroundColor: "#f68e5f",
+    borderRadius: 20,
+    width: 120,
+  },
+  btnText: {
+    color: "white",
+    fontWeight: "bold",
+    textAlign: "center",
   },
 });

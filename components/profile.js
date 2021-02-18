@@ -5,10 +5,10 @@ import {
   View,
   StyleSheet,
   ActivityIndicator,
+  ToastAndroid,
   FlatList,
   TouchableHighlight,
 } from "react-native";
-import { ScrollView } from "react-native-gesture-handler";
 
 class Profile extends Component {
   //start my state
@@ -17,7 +17,7 @@ class Profile extends Component {
     this.state = {
       userDeets: [],
       favourites: [],
-      myComments: [],
+      // myComments: [],
     };
   }
 
@@ -40,41 +40,62 @@ class Profile extends Component {
           userDeets: responseJson,
           favourites: responseJson.favourite_locations,
         });
-        console.log("Get User() fetched. Response 200 ");
-        this.getReview();
       })
       .catch((error) => {
         console.log(error);
       });
   };
 
-  // Get Reviews
-  getReview() {
-    var length = Object.keys(this.state.userDeets.reviews).length;
-    var i;
-    var newState = [];
-    var ids = [];
-    var add;
-    for (i = 0; i < length; i++) {
-      console.log(
-        this.state.userDeets.reviews[i].review.review_body +
-          " id " +
-          this.state.userDeets.reviews[i].review.review_id
-      );
-      newState.push(this.state.userDeets.reviews[i].review.review_body);
-      ids.push(this.state.userDeets.reviews[i].review.review_id);
-      // add.push([
-      //   {
-      //     id: this.state.userDeets.reviews[i].review.review_id,
-      //     comment: this.state.userDeets.reviews[i].review.review_body,
-      //   },
-      // ]);
-    }
-    this.setState({
-      myComments: { comment: { id: ids, review: newState } },
-    });
-    console.log("hi " + JSON.stringify(this.state.myComments));
+  deleteReview = async (loc_id, rev_id) => {
+    console.log("hi " + loc_id + " " + rev_id);
+    const token = await AsyncStorage.getItem("token");
+    fetch(
+      "http://10.0.2.2:3333/api/1.0.0/location/" + loc_id + "/review/" + rev_id,
+      {
+        method: "DELETE",
+        headers: { "X-Authorization": token },
+      }
+    )
+      .then((response) => {
+        if (response.ok) {
+          console.log("Review deleted");
+          this.getUser(); //refresh
+        }
+      })
+      .catch((error) => {
+        console.log("deleteReview() " + error);
+      });
+  };
+  updateReview(obj) {
+    console.log("hi from update" + JSON.stringify(obj));
+    this.props.navigation.navigate("updateReview", obj);
   }
+
+  unFavouriteLocation = async (obj) => {
+    const locID = obj.location_id;
+    const location = obj.location_name;
+    const token = await AsyncStorage.getItem("token");
+    // ToastAndroid.show(location + locID, ToastAndroid.SHORT);
+    fetch("http://10.0.2.2:3333/api/1.0.0/location/" + locID + "/favourite", {
+      method: "DELETE",
+      headers: {
+        Accept: "application/json",
+        "X-Authorization": token,
+      },
+    })
+      .then((response) => {
+        if (response.ok) {
+          console.log(location + " un-Favourited!");
+          ToastAndroid.show(location + " un-Favourited!", ToastAndroid.SHORT);
+          this.getUser();
+        } else {
+          console.log("error occured...");
+        }
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  };
 
   componentDidMount() {
     this.getUser();
@@ -83,10 +104,10 @@ class Profile extends Component {
   render() {
     return (
       <View style={ss.container}>
-        <Text style={ss.title}>Your Profile</Text>
-        <Text>Name: {this.state.userDeets.first_name}</Text>
-        <Text>Surname: {this.state.userDeets.last_name}</Text>
-        <Text>e-mail: {this.state.userDeets.email}</Text>
+        <Text style={ss.title}>My Profile</Text>
+        <Text style={ss.text}>Name: {this.state.userDeets.first_name}</Text>
+        <Text style={ss.text}>Surname: {this.state.userDeets.last_name}</Text>
+        <Text style={ss.text}>e-mail: {this.state.userDeets.email}</Text>
         <View style={ss.btnContainer}>
           <TouchableHighlight
             style={ss.thButton}
@@ -94,7 +115,7 @@ class Profile extends Component {
             underlayColor="#fff"
           >
             <View>
-              <Text style={ss.textBtn}>Update User</Text>
+              <Text style={ss.touchableBtn}>Update User</Text>
             </View>
           </TouchableHighlight>
         </View>
@@ -103,9 +124,18 @@ class Profile extends Component {
 
           <FlatList
             style={ss.flatList}
-            data={this.state.favourites}
+            data={this.state.userDeets.favourite_locations}
             renderItem={({ item }) => (
-              <Text style={ss.text}>{item.location_name}</Text>
+              <View style={ss.myReview}>
+                <Text style={ss.ftext}>{item.location_name}</Text>
+                <TouchableHighlight
+                  style={ss.tHighlight}
+                  onPress={() => this.unFavouriteLocation(item)} //RUN FUNCTION
+                  underlayColor="#fff"
+                >
+                  <Text style={ss.text}>Remove</Text>
+                </TouchableHighlight>
+              </View>
             )}
             keyExtractor={(item) => item.location_id.toString()}
           />
@@ -113,22 +143,37 @@ class Profile extends Component {
           <Text style={ss.title}>My Reviews</Text>
 
           <FlatList
-            data={this.state.userDeets}
+            style={ss.flatList}
+            keyExtractor={(item) => item.review.review_id.toString()}
+            data={this.state.userDeets.reviews}
             renderItem={({ item }) => (
-              <Text style={ss.text}>{item.review_body}</Text>
-            )}
-            keyExtractor={(item) => item.review_id.toString()}
-          />
+              <View style={ss.myReview}>
+                <Text style={ss.ftext}>{item.review.review_body}</Text>
+                <View style={ss.tHighlight}>
+                  <TouchableHighlight
+                    // style={ss.touchableBtn}
+                    onPress={() =>
+                      this.deleteReview(
+                        item.location.location_id,
+                        item.review.review_id
+                      )
+                    } //RUN FUNCTION
+                    underlayColor="#fff"
+                  >
+                    <Text style={ss.text}>Delete</Text>
+                  </TouchableHighlight>
 
-          <TouchableHighlight
-            style={ss.thButton}
-            onPress={() => this.getReview()} //RUN FUNCTION
-            underlayColor="#fff"
-          >
-            <View>
-              <Text style={ss.textBtn}>Run LOG!</Text>
-            </View>
-          </TouchableHighlight>
+                  <TouchableHighlight
+                    // style={ss.touchableBtn}
+                    onPress={() => this.updateReview(item)} //RUN FUNCTION
+                    underlayColor="#fff"
+                  >
+                    <Text style={ss.text}>Update</Text>
+                  </TouchableHighlight>
+                </View>
+              </View>
+            )}
+          />
         </View>
       </View>
     );
@@ -137,39 +182,45 @@ class Profile extends Component {
 export default Profile;
 const ss = StyleSheet.create({
   container: {
-    flex: 1,
-    // marginTop: 32,
     paddingHorizontal: 24,
+  },
+  flatList: {
+    backgroundColor: "#e7ecef",
+    height: 230,
   },
   thButton: {
     padding: 10,
     backgroundColor: "#f68e5f",
     borderRadius: 20,
-    width: 120,
+    width: 100,
   },
-  btnContainer: {
+  myReview: {
     flexDirection: "row",
-    justifyContent: "center",
+    justifyContent: "space-between",
+  },
+  tHighlight: {
+    flexDirection: "row",
+    justifyContent: "space-between",
   },
   text: {
-    fontSize: 18,
+    fontSize: 15,
     fontWeight: "400",
     color: "black",
     padding: 10,
   },
-  textBtn: {
+  ftext: {
+    fontSize: 18,
+    color: "black",
+    padding: 10,
+    width: 210, //fixed dimensions for text don't chnage
+  },
+  touchableBtn: {
     color: "white",
     fontWeight: "bold",
-    textAlign: "center",
   },
-  flatList: {
-    marginTop: 20,
-    fontSize: 40,
-    fontWeight: "400",
-    color: "black",
-  },
+
   title: {
-    fontSize: 30,
+    fontSize: 25,
     fontWeight: "800",
     color: "black",
   },

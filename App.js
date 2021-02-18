@@ -20,6 +20,7 @@ import locations from "./components/locations";
 import review from "./components/review";
 import Profile from "./components/profile";
 import Update from "./components/updateUser";
+import updateReview from "./components/updateReview";
 
 class App extends Component {
   render() {
@@ -68,6 +69,13 @@ class App extends Component {
             name="review"
             component={review}
             options={({ route }) => ({ title: route.params.location_name })}
+          />
+          <Stack.Screen
+            name="updateReview"
+            component={updateReview}
+            options={({ route }) => ({
+              title: route.params.location_name,
+            })}
           />
         </Stack.Navigator>
       </NavigationContainer>

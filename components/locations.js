@@ -8,6 +8,7 @@ import {
   TouchableOpacity,
   FlatList,
   Button,
+  ToastAndroid,
   TouchableHighlight,
   Image,
 } from "react-native";
@@ -103,7 +104,6 @@ class locations extends Component {
         this.setState({
           userFavourites: responseJson,
         });
-        console.log("getUserFavourite 200 OK");
         this.likeFunction();
       })
       .catch((error) => {
@@ -126,9 +126,11 @@ class locations extends Component {
           this.setState({
             heartColour: "❤",
           });
-          console.log(
-            "Location: " + this.state.coffeeDeets.location_name + " favourited!"
+          ToastAndroid.show(
+            this.state.coffeeDeets.location_name + " favourited!",
+            ToastAndroid.SHORT
           );
+          console.log(this.state.coffeeDeets.location_name + " favourited!");
         } else {
           console.log("error occured...");
         }
