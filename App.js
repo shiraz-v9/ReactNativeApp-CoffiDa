@@ -21,6 +21,7 @@ import review from "./components/review";
 import Profile from "./components/profile";
 import Update from "./components/updateUser";
 import updateReview from "./components/updateReview";
+import Photo from "./components/displayPhoto";
 
 class App extends Component {
   render() {
@@ -65,6 +66,7 @@ class App extends Component {
             component={locations}
             options={({ route }) => ({ title: route.params.name })}
           />
+          <Stack.Screen name="Photo" component={Photo} />
           <Stack.Screen
             name="review"
             component={review}

@@ -67,9 +67,9 @@ class locations extends Component {
   }
 
   getLocationID = async () => {
-    const id = this.props.route.params.item;
+    const locID = this.props.route.params.item;
     const token = await AsyncStorage.getItem("token");
-    fetch("http://10.0.2.2:3333/api/1.0.0/location/" + id, {
+    fetch("http://10.0.2.2:3333/api/1.0.0/location/" + locID, {
       headers: {
         Accept: "application/json",
         "X-Authorization": token,
@@ -163,33 +163,40 @@ class locations extends Component {
       });
   };
 
-  // getPhoto = async () => {
-  //   const token = await AsyncStorage.getItem("token");
-  //   const locID = this.props.route.params.item;
+  photoFunc = async (obj) => {
+    // console.log("hi " + JSON.stringify(obj));
 
-  //   fetch(
-  //     "http://localhost:3333/api/1.0.0/location/" +
-  //       locID +
-  //       "/review/" +
-  //       2 +
-  //       "/photo",
-  //     {
-  //       headers: {
-  //         Accept: "image/jpeg",
-  //       },
-  //     }
-  //   )
-  //     .then((response) => response.blob())
-  //     .then((images) => {
-  //       this.setState({
-  //         photos: images,
-  //       });
-  //     })
-
-  //     .catch((error) => {
-  //       console.error("getPhoto()" + error);
-  //     });
-  // };
+    const token = await AsyncStorage.getItem("token");
+    fetch(
+      "http://10.0.2.2:3333/api/1.0.0/location/" +
+        this.state.coffeeDeets.location_id +
+        "/review/" +
+        obj.review_id +
+        "/photo",
+      {
+        method: "GET",
+        headers: {
+          Accept: "image/jpeg",
+          Accept: "image/png",
+          "X-Authorization": token,
+        },
+      }
+    )
+      .then((response) => {
+        if (response.ok) {
+          console.log("OK.. getting photo");
+          this.props.navigation.navigate("Photo", {
+            locID: this.state.coffeeDeets.location_id,
+            revID: obj.review_id,
+          });
+        } else {
+          console.log("No Photo found... ignore");
+        }
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  };
 
   likeComments = async (revID) => {
     const token = await AsyncStorage.getItem("token");
@@ -244,18 +251,18 @@ class locations extends Component {
       });
   };
 
-  isReviewMine = async (commentID) => {
-    const myID = await AsyncStorage.getItem("id");
-    if (commentID == myID) {
-      this.setState({ deleteBtn: "❌" });
-    }
-  };
+  // isReviewMine = async (commentID) => {
+  //   const myID = await AsyncStorage.getItem("id");
+  //   if (commentID == myID) {
+  //     this.setState({ deleteBtn: "❌" });
+  //   }
+  // };
 
   componentDidMount() {
     this.getLocationID();
     this.changeTitle();
     this.getUserFavourite();
-    this.isReviewMine();
+    // this.isReviewMine();
     // this.getPhoto();
   }
   render() {
@@ -328,22 +335,34 @@ class locations extends Component {
               </TouchableHighlight>
             </View>
           </View>
-          {/* <Text style={ss.title}>Photos</Text>
-          <Image
-            style={ss.tinyLogo}
-            source={{
-              uri: "https://reactnative.dev/img/tiny_logo.png",
-            }}
-          /> */}
           <FlatList
             data={this.state.comments}
             renderItem={({ item }) => (
               <View style={ss.comment}>
-                <Text style={ss.flatList}>{item.review_body}</Text>
+                <View style={ss.rowPhotoBody}>
+                  <TouchableHighlight
+                    onPress={() => this.photoFunc(item)}
+                    underlayColor="transparent"
+                  >
+                    <Image
+                      style={ss.tinyLogo}
+                      source={{
+                        uri:
+                          "http://10.0.2.2:3333/api/1.0.0/location/" +
+                          this.state.coffeeDeets.location_id +
+                          "/review/" +
+                          item.review_id +
+                          "/photo",
+                      }}
+                    />
+                  </TouchableHighlight>
+                  <Text style={ss.text}>{item.review_body}</Text>
+                </View>
                 <Text style={ss.flatList}>
                   ⭐{item.overall_rating} 💲{item.price_rating} 🍽
                   {item.quality_rating} 🧹{item.clenliness_rating}{" "}
                 </Text>
+
                 <View style={ss.inputBtnContainer}>
                   {/* BUTTON VIEW ⚠ */}
                   <Text style={ss.text}>
@@ -358,15 +377,6 @@ class locations extends Component {
                     onPress={() => this.dislikeComments(item.review_id)}
                     title="👎"
                   />
-                  <TouchableHighlight
-                    // style={ss.thButton}
-                    onPress={() => this.isReviewMine(item.review_id)}
-                    underlayColor="#fff"
-                  >
-                    <View>
-                      <Text style={ss.textBtn}> {this.state.deleteBtn} </Text>
-                    </View>
-                  </TouchableHighlight>
                 </View>
               </View>
             )}
@@ -382,8 +392,11 @@ class locations extends Component {
 export default locations;
 
 const ss = StyleSheet.create({
+  content: {
+    flex: 1,
+  },
   scrollView: {
-    flex: 3,
+    flex: 4,
     paddingHorizontal: 20,
   },
   engine: {
@@ -392,8 +405,8 @@ const ss = StyleSheet.create({
   },
   text: {
     fontSize: 18,
-    fontWeight: "400",
     color: "black",
+    flexWrap: "wrap",
   },
 
   title: {
@@ -404,11 +417,11 @@ const ss = StyleSheet.create({
   sub: {
     flexDirection: "row",
     justifyContent: "space-evenly",
-    // alignItems: "baseline",
   },
   tinyLogo: {
     width: 50,
     height: 50,
+    marginRight: 10,
   },
   Header: {
     flexDirection: "row",
@@ -417,18 +430,17 @@ const ss = StyleSheet.create({
     paddingBottom: 10,
   },
   flatList: {
-    fontSize: 20,
+    fontSize: 18,
     textAlign: "center",
   },
   comment: {
-    marginTop: 10,
-    fontSize: 20,
+    marginVertical: 10,
     padding: 10,
-    marginBottom: 15,
     backgroundColor: "#e7ecef",
   },
-  content: {
-    flex: 1,
+  rowPhotoBody: {
+    flexDirection: "row",
+    width: 300,
   },
   inputBtnContainer: {
     flexDirection: "row",
@@ -436,12 +448,14 @@ const ss = StyleSheet.create({
     alignItems: "baseline",
   },
   thButton: {
+    //ORANGE T HIGHLIGHT
     padding: 10,
     backgroundColor: "#f68e5f",
     borderRadius: 20,
     width: 150,
   },
   textBtn: {
+    //ORANGE T TEXT
     color: "white",
     fontWeight: "bold",
     textAlign: "center",
