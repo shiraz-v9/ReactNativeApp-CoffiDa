@@ -5,6 +5,8 @@ import {
   View,
   StyleSheet,
   ActivityIndicator,
+  Image,
+  Alert,
   ToastAndroid,
   FlatList,
   TouchableHighlight,
@@ -47,7 +49,30 @@ class Profile extends Component {
   };
 
   deleteReview = async (loc_id, rev_id) => {
-    console.log("hi " + loc_id + " " + rev_id);
+    console.log("comment deets: " + loc_id + " " + rev_id);
+    Alert.alert(
+      "Alert Title",
+      "Chose wheter you want to delete review or photo only",
+      [
+        {
+          text: "Cancel",
+          // onPress: () => console.log("Cancelled"),
+          style: "cancel",
+        },
+        {
+          text: "Delete Review",
+          onPress: () => this.reviewDelete(loc_id, rev_id),
+        },
+        {
+          text: "Remove Photo",
+          onPress: () => this.photoDelete(loc_id, rev_id),
+        },
+      ],
+      { cancelable: false }
+    );
+  };
+
+  reviewDelete = async (loc_id, rev_id) => {
     const token = await AsyncStorage.getItem("token");
     fetch(
       "http://10.0.2.2:3333/api/1.0.0/location/" + loc_id + "/review/" + rev_id,
@@ -59,13 +84,41 @@ class Profile extends Component {
       .then((response) => {
         if (response.ok) {
           console.log("Review deleted");
+          ToastAndroid.show("Review deleted", ToastAndroid.SHORT);
           this.getUser(); //refresh
         }
       })
       .catch((error) => {
-        console.log("deleteReview() " + error);
+        console.log(error);
       });
   };
+
+  photoDelete = async (loc_id, rev_id) => {
+    console.log(loc_id, rev_id);
+    const token = await AsyncStorage.getItem("token");
+    fetch(
+      "http://10.0.2.2:3333/api/1.0.0/location/" +
+        loc_id +
+        "/review/" +
+        rev_id +
+        "/photo",
+      {
+        method: "DELETE",
+        headers: { "X-Authorization": token },
+      }
+    )
+      .then((response) => {
+        if (response.ok) {
+          ToastAndroid.show("Photo Deleted", ToastAndroid.SHORT);
+          console.log("Photo Deleted");
+          this.getUser();
+        } else console.log("different code errorrs");
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  };
+
   updateReview(obj) {
     console.log("hi from update" + JSON.stringify(obj));
     this.props.navigation.navigate("updateReview", obj);
@@ -75,7 +128,6 @@ class Profile extends Component {
     const locID = obj.location_id;
     const location = obj.location_name;
     const token = await AsyncStorage.getItem("token");
-    // ToastAndroid.show(location + locID, ToastAndroid.SHORT);
     fetch("http://10.0.2.2:3333/api/1.0.0/location/" + locID + "/favourite", {
       method: "DELETE",
       headers: {
@@ -148,6 +200,18 @@ class Profile extends Component {
             data={this.state.userDeets.reviews}
             renderItem={({ item }) => (
               <View style={ss.myReview}>
+                <Image
+                  style={ss.image}
+                  source={{
+                    uri:
+                      "http://10.0.2.2:3333/api/1.0.0/location/" +
+                      item.location.location_id +
+                      "/review/" +
+                      item.review.review_id +
+                      "/photo?timestamp=" +
+                      Date.now(),
+                  }}
+                />
                 <Text style={ss.ftext}>{item.review.review_body}</Text>
                 <View style={ss.tHighlight}>
                   <TouchableHighlight
@@ -187,6 +251,7 @@ const ss = StyleSheet.create({
   flatList: {
     backgroundColor: "#e7ecef",
     height: 230,
+    padding: 10,
   },
   thButton: {
     padding: 10,
@@ -212,7 +277,7 @@ const ss = StyleSheet.create({
     fontSize: 18,
     color: "black",
     padding: 10,
-    width: 210, //fixed dimensions for text don't chnage
+    width: 180, //fixed dimensions for text don't chnage
   },
   touchableBtn: {
     color: "white",
@@ -223,5 +288,9 @@ const ss = StyleSheet.create({
     fontSize: 25,
     fontWeight: "800",
     color: "black",
+  },
+  image: {
+    width: 50,
+    height: 50,
   },
 });

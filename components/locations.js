@@ -89,7 +89,6 @@ class locations extends Component {
   };
 
   getUserFavourite = async () => {
-    //this is used for the like unlike location feature!
     const token = await AsyncStorage.getItem("token");
     const asID = await AsyncStorage.getItem("id");
 
@@ -139,33 +138,31 @@ class locations extends Component {
         console.error("favouriteLocation() " + error);
       });
   };
-  unFavouriteLocation = async () => {
-    const id = this.props.route.params.item;
-    const token = await AsyncStorage.getItem("token");
-    fetch("http://10.0.2.2:3333/api/1.0.0/location/" + id + "/favourite", {
-      method: "DELETE",
-      headers: {
-        Accept: "application/json",
-        "X-Authorization": token,
-      },
-    })
-      .then((response) => {
-        if (response.ok) {
-          console.log(
-            "Location: " + this.state.coffeeDeets.location_name + " favourited!"
-          );
-        } else {
-          console.log("error occured...");
-        }
-      })
-      .catch((error) => {
-        console.log("unFavouriteLocation() " + error);
-      });
-  };
+  // unFavouriteLocation = async () => {
+  //   const id = this.props.route.params.item;
+  //   const token = await AsyncStorage.getItem("token");
+  //   fetch("http://10.0.2.2:3333/api/1.0.0/location/" + id + "/favourite", {
+  //     method: "DELETE",
+  //     headers: {
+  //       Accept: "application/json",
+  //       "X-Authorization": token,
+  //     },
+  //   })
+  //     .then((response) => {
+  //       if (response.ok) {
+  //         console.log(
+  //           "Location: " + this.state.coffeeDeets.location_name + " favourited!"
+  //         );
+  //       } else {
+  //         console.log("error occured...");
+  //       }
+  //     })
+  //     .catch((error) => {
+  //       console.log("unFavouriteLocation() " + error);
+  //     });
+  // };
 
   photoFunc = async (obj) => {
-    // console.log("hi " + JSON.stringify(obj));
-
     const token = await AsyncStorage.getItem("token");
     fetch(
       "http://10.0.2.2:3333/api/1.0.0/location/" +
@@ -201,7 +198,6 @@ class locations extends Component {
   likeComments = async (revID) => {
     const token = await AsyncStorage.getItem("token");
     const id = this.props.route.params.item;
-    // console.log("hi " + revID + " location " + id); //test
     fetch(
       "http://10.0.2.2:3333/api/1.0.0/location/" +
         id +
@@ -216,6 +212,7 @@ class locations extends Component {
       .then((response) => {
         if (response.ok) {
           console.log("Comment Liked");
+          ToastAndroid.show("Comment Liked", ToastAndroid.SHORT);
           this.getLocationID(); //refresh
         }
       })
@@ -241,7 +238,8 @@ class locations extends Component {
     )
       .then((response) => {
         if (response.ok) {
-          console.log("Like Removed!");
+          console.log("Like Removed");
+          ToastAndroid.show("Like Removed!", ToastAndroid.SHORT);
           this.getLocationID(); //refresh
         }
       })
@@ -250,13 +248,6 @@ class locations extends Component {
         console.log("dislikeComments() " + error);
       });
   };
-
-  // isReviewMine = async (commentID) => {
-  //   const myID = await AsyncStorage.getItem("id");
-  //   if (commentID == myID) {
-  //     this.setState({ deleteBtn: "❌" });
-  //   }
-  // };
 
   componentDidMount() {
     this.getLocationID();
@@ -297,11 +288,11 @@ class locations extends Component {
 
         <View style={ss.scrollView}>
           <View style={ss.Header}>
+            <Text style={ss.title}>{this.state.coffeeDeets.location_name}</Text>
+            <Text style={ss.text}>{this.state.coffeeDeets.location_town}</Text>
             <TouchableOpacity onPress={() => this.favouriteLocation()}>
               <Text style={ss.title}>{this.state.heartColour}</Text>
             </TouchableOpacity>
-            <Text style={ss.title}>{this.state.coffeeDeets.location_name}</Text>
-            <Text style={ss.text}>{this.state.coffeeDeets.location_town}</Text>
           </View>
           <Text style={ss.text}>
             Overall Rating: {this.state.coffeeDeets.avg_overall_rating}
@@ -336,7 +327,7 @@ class locations extends Component {
             </View>
           </View>
           <FlatList
-            data={this.state.comments}
+            data={this.state.coffeeDeets.location_reviews}
             renderItem={({ item }) => (
               <View style={ss.comment}>
                 <View style={ss.rowPhotoBody}>
@@ -345,14 +336,15 @@ class locations extends Component {
                     underlayColor="transparent"
                   >
                     <Image
-                      style={ss.tinyLogo}
+                      style={ss.image}
                       source={{
                         uri:
                           "http://10.0.2.2:3333/api/1.0.0/location/" +
                           this.state.coffeeDeets.location_id +
                           "/review/" +
                           item.review_id +
-                          "/photo",
+                          "/photo?timestamp=" +
+                          Date.now(),
                       }}
                     />
                   </TouchableHighlight>
@@ -418,7 +410,7 @@ const ss = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "space-evenly",
   },
-  tinyLogo: {
+  image: {
     width: 50,
     height: 50,
     marginRight: 10,

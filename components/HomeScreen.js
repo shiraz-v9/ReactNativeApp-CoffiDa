@@ -10,6 +10,7 @@ import {
   StyleSheet,
   TouchableHighlight,
 } from "react-native";
+// const s = require("./style/style.js");
 
 import { TouchableOpacity } from "react-native-gesture-handler";
 
