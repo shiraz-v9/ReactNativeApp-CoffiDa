@@ -7,7 +7,7 @@ import {
   StyleSheet,
 } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import HomeScreen from "./HomeScreen";
+import { externalCSS } from "../style/style";
 
 var jsonData;
 class loginAsync extends Component {
@@ -104,59 +104,44 @@ class loginAsync extends Component {
     this.signedInUser(); // is asyncstorage is set we want to direct user to HOME with this function.
     const nav = this.props.navigation;
     return (
-      <View style={ss.container}>
-        <Text style={ss.title}>CoffiDa API ☕</Text>
+      <View style={externalCSS.container}>
+        <Text style={externalCSS.title}>CoffiDa API ☕</Text>
+        <View style={ss.centeredView}>
+          <TextInput
+            style={externalCSS.inputBox}
+            placeholder="email"
+            onChangeText={(email) => this.setState({ email })}
+            value={this.setState.email}
+          />
+          <TextInput
+            style={externalCSS.inputBox}
+            placeholder="password"
+            secureTextEntry
+            onChangeText={(password) => this.setState({ password })}
+            value={this.setState.password}
+          />
+          <View style={ss.btnContainer}>
+            <TouchableHighlight
+              style={externalCSS.orangeButton}
+              onPress={() => this.loginGetToken()}
+              underlayColor="#fff"
+            >
+              <View>
+                <Text style={externalCSS.boldWhiteTxt}>Login</Text>
+              </View>
+            </TouchableHighlight>
 
-        <TextInput
-          placeholder="email"
-          onChangeText={(email) => this.setState({ email })}
-          value={this.setState.email}
-        />
-        <TextInput
-          placeholder="password"
-          secureTextEntry
-          onChangeText={(password) => this.setState({ password })}
-          value={this.setState.password}
-        />
-        <View style={ss.btnContainer}>
-          <TouchableHighlight
-            style={ss.thButton}
-            onPress={() => this.loginGetToken()}
-            underlayColor="#fff"
-          >
-            <View>
-              <Text style={ss.text}>Login</Text>
-            </View>
-          </TouchableHighlight>
-
-          <TouchableHighlight
-            style={ss.thButton}
-            onPress={() => nav.navigate("signup")}
-            underlayColor="#fff"
-          >
-            <View>
-              <Text style={ss.text}>Sign Up</Text>
-            </View>
-          </TouchableHighlight>
+            <TouchableHighlight
+              style={externalCSS.orangeButton}
+              onPress={() => nav.navigate("signup")}
+              underlayColor="#fff"
+            >
+              <View>
+                <Text style={externalCSS.boldWhiteTxt}>Sign Up</Text>
+              </View>
+            </TouchableHighlight>
+          </View>
         </View>
-        <TouchableHighlight
-          style={ss.clearBtn}
-          onPress={() => this.logOut()}
-          underlayColor="#fff"
-        >
-          <View>
-            <Text style={ss.text}>CLEAR</Text>
-          </View>
-        </TouchableHighlight>
-        <TouchableHighlight
-          style={ss.clearBtn}
-          onPress={() => this.checkJSON()}
-          underlayColor="#fff"
-        >
-          <View>
-            <Text style={ss.text}>TEST</Text>
-          </View>
-        </TouchableHighlight>
       </View>
     );
   }
@@ -165,31 +150,12 @@ class loginAsync extends Component {
 export default loginAsync;
 
 const ss = StyleSheet.create({
-  scrollView: {
-    backgroundColor: "white",
-  },
-  engine: {
-    position: "absolute",
-    right: 0,
-  },
   btnContainer: {
-    flex: 1,
+    marginTop: 50,
     flexDirection: "row",
-    justifyContent: "center",
+    justifyContent: "space-around",
   },
-  container: {
-    marginTop: 32,
-    paddingHorizontal: 24,
-  },
-  title: {
-    fontSize: 24,
-    fontWeight: "600",
-    color: "black",
-  },
-  text: {
-    color: "#fefcfb",
-    textAlign: "center",
-  },
+
   clearBtn: {
     marginTop: 100,
     backgroundColor: "#f68e5f",
@@ -198,56 +164,12 @@ const ss = StyleSheet.create({
     borderRadius: 20,
     width: 50,
   },
-  thButton: {
-    marginRight: 30,
-    marginLeft: 30,
-    marginTop: 10,
-    paddingTop: 10,
-    paddingBottom: 30,
-    backgroundColor: "#f68e5f",
-    borderRadius: 20,
-    width: 150,
-  },
 
   centeredView: {
-    flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
-    marginTop: 22,
-  },
-  modalView: {
-    margin: 20,
-    backgroundColor: "white",
-    borderRadius: 20,
-    padding: 35,
-    alignItems: "center",
-    shadowColor: "#000",
-    shadowOffset: {
-      width: 0,
-      height: 2,
-    },
-    shadowOpacity: 0.25,
-    shadowRadius: 4,
-    elevation: 5,
-  },
-  button: {
-    borderRadius: 20,
-    padding: 10,
-    elevation: 2,
-  },
-  buttonOpen: {
-    backgroundColor: "#F194FF",
-  },
-  buttonClose: {
-    backgroundColor: "#2196F3",
-  },
-  textStyle: {
-    color: "white",
-    fontWeight: "bold",
-    textAlign: "center",
-  },
-  modalText: {
-    marginBottom: 15,
-    textAlign: "center",
+    display: "flex",
+    // flexWrap: "wrap",
+    // alignItems: "space-between",
+    alignContent: "stretch",
+    // justifyContent: "center",
   },
 });

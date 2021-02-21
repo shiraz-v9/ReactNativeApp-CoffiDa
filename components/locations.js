@@ -12,7 +12,8 @@ import {
   TouchableHighlight,
   Image,
 } from "react-native";
-import { ScrollView } from "react-native-gesture-handler";
+
+import { externalCSS } from "../style/style";
 import MapView, { PROVIDER_GOOGLE, Marker } from "react-native-maps";
 
 class locations extends Component {
@@ -288,30 +289,34 @@ class locations extends Component {
 
         <View style={ss.scrollView}>
           <View style={ss.Header}>
-            <Text style={ss.title}>{this.state.coffeeDeets.location_name}</Text>
-            <Text style={ss.text}>{this.state.coffeeDeets.location_town}</Text>
+            <Text style={externalCSS.title}>
+              {this.state.coffeeDeets.location_name}
+            </Text>
+            <Text style={externalCSS.text}>
+              {this.state.coffeeDeets.location_town}
+            </Text>
             <TouchableOpacity onPress={() => this.favouriteLocation()}>
-              <Text style={ss.title}>{this.state.heartColour}</Text>
+              <Text style={externalCSS.title}>{this.state.heartColour}</Text>
             </TouchableOpacity>
           </View>
-          <Text style={ss.text}>
+          <Text style={externalCSS.text}>
             Overall Rating: {this.state.coffeeDeets.avg_overall_rating}
           </Text>
-          <Text style={ss.text}>
+          <Text style={externalCSS.text}>
             Price: {this.state.coffeeDeets.avg_price_rating}
           </Text>
-          <Text style={ss.text}>
+          <Text style={externalCSS.text}>
             Quality: {this.state.coffeeDeets.avg_quality_rating}
           </Text>
-          <Text style={ss.text}>
+          <Text style={externalCSS.text}>
             Cleanliness: {this.state.coffeeDeets.avg_clenliness_rating}
           </Text>
           <View style={ss.sub}>
-            <Text style={ss.title}>Reviews</Text>
+            <Text style={externalCSS.title}>Reviews</Text>
             {/*⚡ --> Post Comment Section */}
             <View style={ss.inputBtnContainer}>
               <TouchableHighlight
-                style={ss.thButton}
+                style={externalCSS.orangeButton}
                 onPress={() =>
                   this.props.navigation.navigate("review", {
                     id: this.state.coffeeDeets.location_id,
@@ -321,7 +326,7 @@ class locations extends Component {
                 underlayColor="#fff"
               >
                 <View>
-                  <Text style={ss.textBtn}> Leave a review </Text>
+                  <Text style={externalCSS.boldWhiteTxt}> Leave a review </Text>
                 </View>
               </TouchableHighlight>
             </View>
@@ -348,7 +353,7 @@ class locations extends Component {
                       }}
                     />
                   </TouchableHighlight>
-                  <Text style={ss.text}>{item.review_body}</Text>
+                  <Text style={externalCSS.text}>{item.review_body}</Text>
                 </View>
                 <Text style={ss.flatList}>
                   ⭐{item.overall_rating} 💲{item.price_rating} 🍽
@@ -357,7 +362,7 @@ class locations extends Component {
 
                 <View style={ss.inputBtnContainer}>
                   {/* BUTTON VIEW ⚠ */}
-                  <Text style={ss.text}>
+                  <Text style={externalCSS.text}>
                     👍
                     {item.likes}
                   </Text>
@@ -389,22 +394,7 @@ const ss = StyleSheet.create({
   },
   scrollView: {
     flex: 4,
-    paddingHorizontal: 20,
-  },
-  engine: {
-    position: "absolute",
-    right: 0,
-  },
-  text: {
-    fontSize: 18,
-    color: "black",
-    flexWrap: "wrap",
-  },
-
-  title: {
-    fontSize: 25,
-    fontWeight: "800",
-    color: "black",
+    paddingHorizontal: 24,
   },
   sub: {
     flexDirection: "row",
@@ -422,6 +412,7 @@ const ss = StyleSheet.create({
     paddingBottom: 10,
   },
   flatList: {
+    //CENTERED
     fontSize: 18,
     textAlign: "center",
   },
@@ -438,18 +429,5 @@ const ss = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "space-evenly",
     alignItems: "baseline",
-  },
-  thButton: {
-    //ORANGE T HIGHLIGHT
-    padding: 10,
-    backgroundColor: "#f68e5f",
-    borderRadius: 20,
-    width: 150,
-  },
-  textBtn: {
-    //ORANGE T TEXT
-    color: "white",
-    fontWeight: "bold",
-    textAlign: "center",
   },
 });

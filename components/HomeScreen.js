@@ -10,7 +10,7 @@ import {
   StyleSheet,
   TouchableHighlight,
 } from "react-native";
-// const s = require("./style/style.js");
+import { externalCSS } from "../style/style";
 
 import { TouchableOpacity } from "react-native-gesture-handler";
 
@@ -134,7 +134,7 @@ class HomeScreen extends Component {
     //   );
     // } else {
     return (
-      <View style={ss.container}>
+      <View style={externalCSS.container}>
         <Text>
           <TouchableHighlight
             // style={ss.thButton}
@@ -142,14 +142,17 @@ class HomeScreen extends Component {
             underlayColor="#fff"
           >
             <View>
-              <Text style={ss.title}>
+              <Text style={externalCSS.title}>
                 Welcome to CoffiDa mr {this.state.userData.last_name} 👋
               </Text>
             </View>
           </TouchableHighlight>
         </Text>
-        <Text>Leave reviews and find your favourite coffee place.</Text>
+        <Text style={externalCSS.text}>
+          Leave reviews and find your favourite coffee place.
+        </Text>
         <TextInput
+          style={externalCSS.inputBox}
           placeholder="Query"
           onChangeText={(q) => this.setState({ q })}
           value={this.setState.q}
@@ -207,15 +210,10 @@ export default HomeScreen;
 const ss = StyleSheet.create({
   text: {
     fontSize: 18,
-    fontWeight: "400",
     color: "black",
     padding: 20,
   },
-  container: {
-    flex: 1,
-    marginTop: 20,
-    paddingHorizontal: 24,
-  },
+
   title: {
     fontSize: 24,
     fontWeight: "600",

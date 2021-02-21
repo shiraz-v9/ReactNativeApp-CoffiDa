@@ -11,6 +11,7 @@ import {
   FlatList,
   TouchableHighlight,
 } from "react-native";
+import { externalCSS } from "../style/style";
 
 class Profile extends Component {
   //start my state
@@ -56,7 +57,6 @@ class Profile extends Component {
       [
         {
           text: "Cancel",
-          // onPress: () => console.log("Cancelled"),
           style: "cancel",
         },
         {
@@ -155,8 +155,8 @@ class Profile extends Component {
 
   render() {
     return (
-      <View style={ss.container}>
-        <Text style={ss.title}>My Profile</Text>
+      <View style={externalCSS.container}>
+        <Text style={externalCSS.title}>My Profile</Text>
         <Text style={ss.text}>Name: {this.state.userDeets.first_name}</Text>
         <Text style={ss.text}>Surname: {this.state.userDeets.last_name}</Text>
         <Text style={ss.text}>e-mail: {this.state.userDeets.email}</Text>
@@ -172,7 +172,7 @@ class Profile extends Component {
           </TouchableHighlight>
         </View>
         <View>
-          <Text style={ss.title}>My Favourite Locations:</Text>
+          <Text style={externalCSS.title}>My Favourite Locations:</Text>
 
           <FlatList
             style={ss.flatList}
@@ -192,7 +192,7 @@ class Profile extends Component {
             keyExtractor={(item) => item.location_id.toString()}
           />
 
-          <Text style={ss.title}>My Reviews</Text>
+          <Text style={externalCSS.title}>My Reviews</Text>
 
           <FlatList
             style={ss.flatList}

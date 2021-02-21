@@ -8,7 +8,8 @@ import {
   TextInput,
   TouchableHighlight,
 } from "react-native";
-import { or } from "react-native-reanimated";
+
+import { externalCSS } from "../style/style";
 
 class review extends Component {
   //start my state
@@ -87,49 +88,49 @@ class review extends Component {
 
   render() {
     return (
-      <View style={ss.container}>
-        <Text style={ss.title}>Your review</Text>
+      <View style={externalCSS.container}>
+        <Text style={externalCSS.title}>Your review</Text>
         <TextInput
-          style={ss.inputBox}
+          style={externalCSS.inputBox}
           placeholder={this.props.route.params.review.review_body.toString()}
           onChangeText={(review) => this.setState({ review })}
           value={this.setState.review}
         />
-        <Text style={ss.text}>Overall rating</Text>
+        <Text style={externalCSS.text}>Overall rating</Text>
         <TextInput
-          style={ss.inputBox}
+          style={externalCSS.inputBox}
           placeholder={this.props.route.params.review.overall_rating.toString()}
           onChangeText={(rating) => this.setState({ rating })}
           value={this.setState.rating}
         />
-        <Text style={ss.text}>Price rating</Text>
+        <Text style={externalCSS.text}>Price rating</Text>
         <TextInput
-          style={ss.inputBox}
+          style={externalCSS.inputBox}
           placeholder={this.props.route.params.review.price_rating.toString()}
           onChangeText={(price) => this.setState({ price })}
           value={this.setState.price}
         />
-        <Text style={ss.text}>Quality rating</Text>
+        <Text style={externalCSS.text}>Quality rating</Text>
         <TextInput
-          style={ss.inputBox}
+          style={externalCSS.inputBox}
           placeholder={this.props.route.params.review.quality_rating.toString()}
           onChangeText={(quality) => this.setState({ quality })}
           value={this.setState.quality}
         />
-        <Text style={ss.text}>Clenliness rating</Text>
+        <Text style={externalCSS.text}>Clenliness rating</Text>
         <TextInput
-          style={ss.inputBox}
+          style={externalCSS.inputBox}
           placeholder={this.props.route.params.review.clenliness_rating.toString()}
           onChangeText={(clenliness) => this.setState({ clenliness })}
           value={this.setState.clenliness}
         />
         <TouchableHighlight
-          style={ss.thButton}
+          style={externalCSS.orangeButton}
           onPress={() => this.updateReview()} //RUN FUNCTION
           underlayColor="#fff"
         >
           <View>
-            <Text style={ss.textBtn}>Update review</Text>
+            <Text style={externalCSS.boldWhiteTxt}>Update review</Text>
           </View>
         </TouchableHighlight>
       </View>
@@ -137,34 +138,3 @@ class review extends Component {
   }
 }
 export default review;
-const ss = StyleSheet.create({
-  container: {
-    marginTop: 32,
-    paddingHorizontal: 24,
-  },
-  inputBox: {
-    backgroundColor: "white",
-    borderRadius: 10,
-  },
-  thButton: {
-    padding: 10,
-    backgroundColor: "#f68e5f",
-    borderRadius: 20,
-    width: 120,
-  },
-  textBtn: {
-    color: "white",
-    fontWeight: "bold",
-    textAlign: "center",
-  },
-  title: {
-    fontSize: 25,
-    fontWeight: "800",
-    color: "black",
-  },
-  text: {
-    fontSize: 18,
-    fontWeight: "400",
-    color: "black",
-  },
-});

@@ -9,7 +9,7 @@ import {
   StyleSheet,
   TouchableHighlight,
 } from "react-native";
-
+import { externalCSS } from "../style/style";
 class Update extends Component {
   constructor(props) {
     super(props);
@@ -52,37 +52,41 @@ class Update extends Component {
 
   render() {
     return (
-      <View style={ss.container}>
-        <Text>Update user information</Text>
+      <View style={externalCSS.container}>
+        <Text style={externalCSS.title}>Update my profile</Text>
 
         <TextInput
+          style={externalCSS.inputBox}
           placeholder="new Name"
           onChangeText={(newName) => this.setState({ newName })}
           value={this.setState.newName}
         />
         <TextInput
+          style={externalCSS.inputBox}
           placeholder="new Surname"
           onChangeText={(newSurname) => this.setState({ newSurname })}
           value={this.setState.newSurname}
         />
         <TextInput
+          style={externalCSS.inputBox}
           placeholder="new Email"
           onChangeText={(newEmail) => this.setState({ newEmail })}
           value={this.setState.newEmail}
         />
         <TextInput
+          style={externalCSS.inputBox}
           placeholder="new Password"
           secureTextEntry
           onChangeText={(newPassword) => this.setState({ newPassword })}
           value={this.setState.newPassword}
         />
         <TouchableHighlight
-          style={ss.thButton}
+          style={externalCSS.orangeButton}
           onPress={() => this.updateUser()} //RUN FUNCTION
           underlayColor="#fff"
         >
           <View>
-            <Text style={ss.textBtn}>Update</Text>
+            <Text style={externalCSS.boldWhiteTxt}>Update</Text>
           </View>
         </TouchableHighlight>
       </View>
@@ -91,21 +95,3 @@ class Update extends Component {
 }
 
 export default Update;
-
-const ss = StyleSheet.create({
-  container: {
-    marginTop: 32,
-    paddingHorizontal: 24,
-  },
-  thButton: {
-    padding: 10,
-    backgroundColor: "#f68e5f",
-    borderRadius: 20,
-    width: 120,
-  },
-  textBtn: {
-    color: "white",
-    fontWeight: "bold",
-    textAlign: "center",
-  },
-});

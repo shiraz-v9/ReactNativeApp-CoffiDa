@@ -1,6 +1,13 @@
 import React, { Component } from "react";
-import { Text, TextInput, View, Button, Alert, StyleSheet } from "react-native";
-
+import {
+  Text,
+  TextInput,
+  View,
+  TouchableHighlight,
+  StyleSheet,
+  ToastAndroid,
+} from "react-native";
+import { externalCSS } from "../style/style";
 class signup extends Component {
   constructor(props) {
     super(props);
@@ -14,7 +21,6 @@ class signup extends Component {
       email: "",
       password: "",
       id: "",
-      // person: { name: "John", age: 31, city: "New York" },
     };
   }
   signMeIn() {
@@ -36,6 +42,10 @@ class signup extends Component {
         this.setState({
           id: data.user_id,
         });
+        ToastAndroid.show(
+          "Account created! you can now log-in",
+          ToastAndroid.SHORT
+        );
         console.log("Success, ID created... ", data.user_id);
         this.props.navigation.navigate(
           "loginAsync",
@@ -48,85 +58,54 @@ class signup extends Component {
         console.log(error);
       });
   }
-  // passParams() {
-  //   this.props.navigation.navigate("loginAsync", this.state.person);
-  // }
+
   render() {
     const nav = this.props.navigation;
     return (
-      <View style={ss.container}>
-        <Text>
+      <View style={externalCSS.container}>
+        <Text style={externalCSS.title}>
           Create a new account. email must be valid and password must be greater
           than 5 characters
         </Text>
 
         <TextInput
+          style={externalCSS.inputBox}
           placeholder="first_name"
           onChangeText={(first_name) => this.setState({ first_name })}
           value={this.setState.first_name}
         />
         <TextInput
+          style={externalCSS.inputBox}
           placeholder="last_name"
           onChangeText={(last_name) => this.setState({ last_name })}
           value={this.setState.last_name}
         />
         <TextInput
+          style={externalCSS.inputBox}
           placeholder="email"
           onChangeText={(email) => this.setState({ email })}
           value={this.setState.email}
         />
         <TextInput
+          style={externalCSS.inputBox}
           placeholder="password"
           secureTextEntry
           onChangeText={(password) => this.setState({ password })}
           value={this.setState.password}
         />
-        <Button title="Sign Up" onPress={() => this.signMeIn()} />
-        <Button title="◀ Back" onPress={() => nav.goBack()} />
-        <Button title="test params" onPress={() => this.passParams()} />
+
+        <TouchableHighlight
+          style={externalCSS.orangeButton}
+          onPress={() => this.signMeIn()}
+          underlayColor="#fff"
+        >
+          <View>
+            <Text style={externalCSS.boldWhiteTxt}>Sign Up</Text>
+          </View>
+        </TouchableHighlight>
       </View>
     );
   }
 }
 
 export default signup;
-
-const ss = StyleSheet.create({
-  scrollView: {
-    backgroundColor: "white",
-  },
-  engine: {
-    position: "absolute",
-    right: 0,
-  },
-  body: {
-    backgroundColor: "white",
-  },
-  container: {
-    marginTop: 32,
-    paddingHorizontal: 24,
-  },
-  sectionTitle: {
-    fontSize: 24,
-    fontWeight: "600",
-    color: "black",
-  },
-  sectionDescription: {
-    marginTop: 8,
-    fontSize: 18,
-    fontWeight: "400",
-    color: "black",
-  },
-  highlight: {
-    //add bold text
-    fontWeight: "700",
-  },
-  footer: {
-    color: "black",
-    fontSize: 12,
-    fontWeight: "600",
-    padding: 4,
-    paddingRight: 12,
-    textAlign: "right",
-  },
-});
