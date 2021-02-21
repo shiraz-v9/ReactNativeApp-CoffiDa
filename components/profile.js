@@ -157,17 +157,23 @@ class Profile extends Component {
     return (
       <View style={externalCSS.container}>
         <Text style={externalCSS.title}>My Profile</Text>
-        <Text style={ss.text}>Name: {this.state.userDeets.first_name}</Text>
-        <Text style={ss.text}>Surname: {this.state.userDeets.last_name}</Text>
-        <Text style={ss.text}>e-mail: {this.state.userDeets.email}</Text>
+        <Text style={externalCSS.text}>
+          Name: {this.state.userDeets.first_name}
+        </Text>
+        <Text style={externalCSS.text}>
+          Surname: {this.state.userDeets.last_name}
+        </Text>
+        <Text style={externalCSS.text}>
+          e-mail: {this.state.userDeets.email}
+        </Text>
         <View style={ss.btnContainer}>
           <TouchableHighlight
-            style={ss.thButton}
+            style={externalCSS.orangeButton}
             onPress={() => this.props.navigation.navigate("Update")} //RUN FUNCTION
             underlayColor="#fff"
           >
             <View>
-              <Text style={ss.touchableBtn}>Update User</Text>
+              <Text style={externalCSS.boldWhiteTxt}>Update User</Text>
             </View>
           </TouchableHighlight>
         </View>
@@ -245,19 +251,10 @@ class Profile extends Component {
 }
 export default Profile;
 const ss = StyleSheet.create({
-  container: {
-    paddingHorizontal: 24,
-  },
   flatList: {
     backgroundColor: "#e7ecef",
     height: 230,
     padding: 10,
-  },
-  thButton: {
-    padding: 10,
-    backgroundColor: "#f68e5f",
-    borderRadius: 20,
-    width: 100,
   },
   myReview: {
     flexDirection: "row",
@@ -279,16 +276,7 @@ const ss = StyleSheet.create({
     padding: 10,
     width: 180, //fixed dimensions for text don't chnage
   },
-  touchableBtn: {
-    color: "white",
-    fontWeight: "bold",
-  },
 
-  title: {
-    fontSize: 25,
-    fontWeight: "800",
-    color: "black",
-  },
   image: {
     width: 50,
     height: 50,

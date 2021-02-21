@@ -8,6 +8,7 @@ export const externalCSS = StyleSheet.create({
   },
   text: {
     fontSize: 18,
+    // padding: 10,
   },
   title: {
     fontSize: 24,
@@ -17,7 +18,7 @@ export const externalCSS = StyleSheet.create({
   orangeButton: {
     padding: 10,
     backgroundColor: "#f68e5f",
-    borderRadius: 20,
+    borderRadius: 10,
     width: 120,
   },
   boldWhiteTxt: {
@@ -30,5 +31,14 @@ export const externalCSS = StyleSheet.create({
     marginVertical: 10,
     backgroundColor: "white",
     borderRadius: 10,
+  },
+  picker: {
+    height: 50,
+    width: 165,
+  },
+  buttonView: {
+    flexDirection: "row",
+    justifyContent: "space-around",
+    alignItems: "center",
   },
 });

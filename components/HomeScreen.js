@@ -151,14 +151,24 @@ class HomeScreen extends Component {
         <Text style={externalCSS.text}>
           Leave reviews and find your favourite coffee place.
         </Text>
-        <TextInput
-          style={externalCSS.inputBox}
-          placeholder="Query"
-          onChangeText={(q) => this.setState({ q })}
-          value={this.setState.q}
-        />
-        <Button onPress={() => this.search()} title="Search" />
-
+        <View>
+          <TextInput
+            style={externalCSS.inputBox}
+            placeholder="Query"
+            onChangeText={(q) => this.setState({ q })}
+            value={this.setState.q}
+          />
+          {/* <Button onPress={() => this.search()} title="Search" /> */}
+          <TouchableHighlight
+            style={externalCSS.orangeButton}
+            onPress={() => this.search()}
+            underlayColor="#fff"
+          >
+            <View>
+              <Text style={externalCSS.boldWhiteTxt}>Search</Text>
+            </View>
+          </TouchableHighlight>
+        </View>
         <FlatList
           style={ss.flatList}
           data={this.state.locations}
@@ -180,22 +190,22 @@ class HomeScreen extends Component {
 
         <View style={ss.btnContainer}>
           <TouchableHighlight
-            style={ss.thButton}
+            style={externalCSS.orangeButton}
             onPress={() => this.logOut()}
             underlayColor="#fff"
           >
             <View>
-              <Text style={ss.btnText}>Logout</Text>
+              <Text style={externalCSS.boldWhiteTxt}>Logout</Text>
             </View>
           </TouchableHighlight>
 
           <TouchableHighlight
-            style={ss.thButton}
+            style={externalCSS.orangeButton}
             onPress={() => this.tester()}
             underlayColor="#fff"
           >
             <View>
-              <Text style={ss.btnText}>Test</Text>
+              <Text style={externalCSS.boldWhiteTxt}>Test</Text>
             </View>
           </TouchableHighlight>
         </View>
@@ -213,42 +223,14 @@ const ss = StyleSheet.create({
     color: "black",
     padding: 20,
   },
-
-  title: {
-    fontSize: 24,
-    fontWeight: "600",
-    color: "black",
-  },
   flatList: {
     marginTop: 10,
     padding: 10,
     backgroundColor: "#e7ecef",
     paddingBottom: 10,
   },
-  bold: {
-    fontWeight: "700",
-  },
-  footer: {
-    color: "black",
-    fontSize: 12,
-    fontWeight: "600",
-    padding: 4,
-    paddingRight: 12,
-    textAlign: "right",
-  },
   btnContainer: {
     flexDirection: "row",
     justifyContent: "space-evenly",
-  },
-  thButton: {
-    padding: 10,
-    backgroundColor: "#f68e5f",
-    borderRadius: 20,
-    width: 120,
-  },
-  btnText: {
-    color: "white",
-    fontWeight: "bold",
-    textAlign: "center",
   },
 });

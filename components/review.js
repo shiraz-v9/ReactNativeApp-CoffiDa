@@ -5,12 +5,16 @@ import {
   View,
   StyleSheet,
   ActivityIndicator,
-  ToastAndroid,
   TextInput,
+  Alert,
+  Image,
+  ToastAndroid,
   TouchableHighlight,
 } from "react-native";
 import { Picker } from "@react-native-picker/picker";
 import { externalCSS } from "../style/style";
+import * as ImagePicker from "react-native-image-picker";
+
 class review extends Component {
   //start my state
   constructor(props) {
@@ -23,6 +27,7 @@ class review extends Component {
       quality: 0,
       clenliness: 0,
       review: "",
+      userPhoto: "",
     };
   }
   componentDidMount() {
@@ -76,6 +81,24 @@ class review extends Component {
       });
   };
 
+  imagePick = () => {
+    if (this.state.review === "") {
+      ToastAndroid.show("Complete the review first ", ToastAndroid.LONG);
+    } else {
+      const options = { mediaType: "photo" };
+
+      ImagePicker.launchImageLibrary(options, (res) => {
+        // console.log("hey", res);
+        if (res.uri) {
+          this.setState({
+            userPhoto: res,
+          });
+          console.log("state--> ", this.state.userPhoto);
+        }
+      });
+    }
+  };
+
   render() {
     return (
       <View style={externalCSS.container}>
@@ -86,99 +109,91 @@ class review extends Component {
           onChangeText={(review) => this.setState({ review })}
           value={this.setState.review}
         />
-        {/* <TextInput
-          style={externalCSS.inputBox}
-          placeholder="rating"
-          onChangeText={(rating) => this.setState({ rating })}
-          value={this.setState.rating}
-        />
-        <TextInput
-          style={externalCSS.inputBox}
-          placeholder="price"
-          onChangeText={(price) => this.setState({ price })}
-          value={this.setState.price}
-        />
-        <TextInput
-          style={externalCSS.inputBox}
-          placeholder="quality"
-          onChangeText={(quality) => this.setState({ quality })}
-          value={this.setState.quality}
-        /> */}
-        {/* <TextInput
-          style={externalCSS.inputBox}
-          placeholder="clenliness"
-          onChangeText={(clenliness) => this.setState({ clenliness })}
-          value={this.setState.clenliness}
-        /> */}
         <View style={ss.rowContainer}>
           <Text style={externalCSS.text}> Overall Rating</Text>
           <Picker
             selectedValue={this.state.rating}
-            style={{ height: 50, width: 200 }}
+            style={externalCSS.picker}
             onValueChange={(rating) => this.setState({ rating })}
           >
             <Picker.Item label="0" value="0" />
-            <Picker.Item label="1" value="1" />
-            <Picker.Item label="2" value="2" />
-            <Picker.Item label="3" value="3" />
-            <Picker.Item label="4" value="4" />
-            <Picker.Item label="5" value="5" />
+            <Picker.Item label="⭐" value="1" />
+            <Picker.Item label="⭐⭐" value="2" />
+            <Picker.Item label="⭐⭐⭐" value="3" />
+            <Picker.Item label="⭐⭐⭐⭐" value="4" />
+            <Picker.Item label="⭐⭐⭐⭐⭐" value="5" />
           </Picker>
         </View>
         <View style={ss.rowContainer}>
           <Text style={externalCSS.text}> Price</Text>
           <Picker
             selectedValue={this.state.price}
-            style={{ height: 50, width: 200 }}
+            style={externalCSS.picker}
             onValueChange={(price) => this.setState({ price })}
           >
             <Picker.Item label="0" value="0" />
-            <Picker.Item label="1" value="1" />
-            <Picker.Item label="2" value="2" />
-            <Picker.Item label="3" value="3" />
-            <Picker.Item label="4" value="4" />
-            <Picker.Item label="5" value="5" />
+            <Picker.Item label="⭐" value="1" />
+            <Picker.Item label="⭐⭐" value="2" />
+            <Picker.Item label="⭐⭐⭐" value="3" />
+            <Picker.Item label="⭐⭐⭐⭐" value="4" />
+            <Picker.Item label="⭐⭐⭐⭐⭐" value="5" />
           </Picker>
         </View>
         <View style={ss.rowContainer}>
           <Text style={externalCSS.text}> Quality</Text>
           <Picker
             selectedValue={this.state.quality}
-            style={{ height: 50, width: 200 }}
+            style={externalCSS.picker}
             onValueChange={(quality) => this.setState({ quality })}
           >
             <Picker.Item label="0" value="0" />
-            <Picker.Item label="1" value="1" />
-            <Picker.Item label="2" value="2" />
-            <Picker.Item label="3" value="3" />
-            <Picker.Item label="4" value="4" />
-            <Picker.Item label="5" value="5" />
+            <Picker.Item label="⭐" value="1" />
+            <Picker.Item label="⭐⭐" value="2" />
+            <Picker.Item label="⭐⭐⭐" value="3" />
+            <Picker.Item label="⭐⭐⭐⭐" value="4" />
+            <Picker.Item label="⭐⭐⭐⭐⭐" value="5" />
           </Picker>
         </View>
         <View style={ss.rowContainer}>
           <Text style={externalCSS.text}> clenliness</Text>
           <Picker
             selectedValue={this.state.clenliness}
-            style={{ height: 50, width: 200 }}
+            style={externalCSS.picker}
             onValueChange={(clenliness) => this.setState({ clenliness })}
           >
             <Picker.Item label="0" value="0" />
-            <Picker.Item label="1" value="1" />
-            <Picker.Item label="2" value="2" />
-            <Picker.Item label="3" value="3" />
-            <Picker.Item label="4" value="4" />
-            <Picker.Item label="5" value="5" />
+            <Picker.Item label="⭐" value="1" />
+            <Picker.Item label="⭐⭐" value="2" />
+            <Picker.Item label="⭐⭐⭐" value="3" />
+            <Picker.Item label="⭐⭐⭐⭐" value="4" />
+            <Picker.Item label="⭐⭐⭐⭐⭐" value="5" />
           </Picker>
         </View>
-        <TouchableHighlight
-          style={externalCSS.orangeButton}
-          onPress={() => this.leaveReview()} //RUN FUNCTION
-          underlayColor="#fff"
-        >
-          <View>
-            <Text style={externalCSS.boldWhiteTxt}>Post review</Text>
-          </View>
-        </TouchableHighlight>
+        <View style={externalCSS.buttonView}>
+          <TouchableHighlight
+            style={externalCSS.orangeButton}
+            onPress={() => this.leaveReview()} //RUN FUNCTION
+            underlayColor="#fff"
+          >
+            <View>
+              <Text style={externalCSS.boldWhiteTxt}>Post Review</Text>
+            </View>
+          </TouchableHighlight>
+          <TouchableHighlight
+            style={externalCSS.orangeButton}
+            onPress={() => this.imagePick()} //RUN FUNCTION
+            underlayColor="#fff"
+          >
+            <View>
+              <Text style={externalCSS.boldWhiteTxt}>Add Photo</Text>
+            </View>
+          </TouchableHighlight>
+        </View>
+        <Image
+          style={{ width: 350, height: 350 }}
+          source={{ uri: this.state.userPhoto.uri }}
+        />
+        {/* </View> */}
       </View>
     );
   }
