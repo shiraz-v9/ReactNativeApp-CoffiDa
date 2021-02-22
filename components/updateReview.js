@@ -56,7 +56,7 @@ class review extends Component {
       clenliness_rating: parseInt(this.state.clenliness),
       review_body: this.state.review,
     };
-    if (jsonReview.review_body == "") {
+    if (jsonReview.review_body == "" || jsonReview.review_body == " ") {
       ToastAndroid.show("Review cannot be empty!", ToastAndroid.LONG);
     } else {
       const revID = this.props.route.params.review.review_id;

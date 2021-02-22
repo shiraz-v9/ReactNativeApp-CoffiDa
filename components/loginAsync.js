@@ -5,6 +5,7 @@ import {
   View,
   TouchableHighlight,
   StyleSheet,
+  ToastAndroid,
 } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { externalCSS } from "../style/style";
@@ -99,7 +100,10 @@ class loginAsync extends Component {
       })
 
       .catch((error) => {
-        // alert(error);
+        ToastAndroid.show(
+          "Something went wrong check your details again",
+          ToastAndroid.SHORT
+        );
         console.log(error);
       });
   }

@@ -22,6 +22,7 @@ import Profile from "./components/profile";
 import Update from "./components/updateUser";
 import updateReview from "./components/updateReview";
 import Photo from "./components/displayPhoto";
+import Settings from "./components/settings";
 
 class App extends Component {
   render() {
@@ -46,6 +47,7 @@ class App extends Component {
           />
           <Stack.Screen name="Home" component={HomeScreen} />
           <Stack.Screen name="Profile" component={Profile} />
+          <Stack.Screen name="Settings" component={Settings} />
           <Stack.Screen name="Update" component={Update} />
           <Stack.Screen
             name="signup"

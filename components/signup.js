@@ -33,12 +33,14 @@ class signup extends Component {
 
     fetch("http://10.0.2.2:3333/api/1.0.0/user", {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
+      headers: {
+        "Content-Type": "application/json",
+        Accept: "application/json",
+      },
       body: JSON.stringify(jsonUserData),
     })
       .then((response) => response.json())
       .then((data) => {
-        alert("ID: " + data.user_id);
         this.setState({
           id: data.user_id,
         });
@@ -46,7 +48,7 @@ class signup extends Component {
           "Account created! you can now log-in",
           ToastAndroid.SHORT
         );
-        console.log("Success, ID created... ", data.user_id);
+        console.log("Success, ID created... ", JSON.stringify(data));
         this.props.navigation.navigate(
           "loginAsync",
           JSON.stringify(jsonUserData)
@@ -54,7 +56,7 @@ class signup extends Component {
       })
 
       .catch((error) => {
-        alert(error + JSON.stringify(jsonUserData));
+        alert(error);
         console.log(error);
       });
   }

@@ -291,7 +291,7 @@ class Profile extends Component {
           <Text style={externalCSS.text}>
             e-mail: {this.state.userDeets.email}
           </Text>
-          <View style={ss.btnContainer}>
+          <View style={externalCSS.buttonView}>
             <TouchableHighlight
               style={externalCSS.orangeButton}
               onPress={() =>
@@ -301,6 +301,15 @@ class Profile extends Component {
             >
               <View>
                 <Text style={externalCSS.boldWhiteTxt}>Update User</Text>
+              </View>
+            </TouchableHighlight>
+            <TouchableHighlight
+              style={externalCSS.orangeButton}
+              onPress={() => this.props.navigation.navigate("Settings")} //RUN FUNCTION
+              underlayColor="#fff"
+            >
+              <View>
+                <Text style={externalCSS.boldWhiteTxt}>Settings</Text>
               </View>
             </TouchableHighlight>
           </View>
