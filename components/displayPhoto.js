@@ -19,7 +19,8 @@ class Photo extends Component {
               this.props.route.params.locID +
               "/review/" +
               this.props.route.params.revID +
-              "/photo",
+              "/photo?timestamp=" +
+              Date.now(),
           }}
         />
       </View>

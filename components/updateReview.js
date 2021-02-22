@@ -11,6 +11,7 @@ import {
 } from "react-native";
 import * as ImagePicker from "react-native-image-picker";
 import { externalCSS } from "../style/style";
+import { Picker } from "@react-native-picker/picker";
 
 class review extends Component {
   //start my state
@@ -19,10 +20,10 @@ class review extends Component {
     this.state = {};
 
     this.state = {
-      rating: 0,
-      price: 0,
-      quality: 0,
-      clenliness: 0,
+      rating: this.props.route.params.review.overall_rating,
+      price: this.props.route.params.review.price_rating,
+      quality: this.props.route.params.review.quality_rating,
+      clenliness: this.props.route.params.review.clenliness_rating,
       review: "",
       userPhoto: "",
     };
@@ -147,34 +148,66 @@ class review extends Component {
           onChangeText={(review) => this.setState({ review })}
           value={this.setState.review}
         />
-        <Text style={externalCSS.text}>Overall rating</Text>
-        <TextInput
-          style={externalCSS.inputBox}
-          placeholder={this.props.route.params.review.overall_rating.toString()}
-          onChangeText={(rating) => this.setState({ rating })}
-          value={this.setState.rating}
-        />
-        <Text style={externalCSS.text}>Price rating</Text>
-        <TextInput
-          style={externalCSS.inputBox}
-          placeholder={this.props.route.params.review.price_rating.toString()}
-          onChangeText={(price) => this.setState({ price })}
-          value={this.setState.price}
-        />
-        <Text style={externalCSS.text}>Quality rating</Text>
-        <TextInput
-          style={externalCSS.inputBox}
-          placeholder={this.props.route.params.review.quality_rating.toString()}
-          onChangeText={(quality) => this.setState({ quality })}
-          value={this.setState.quality}
-        />
-        <Text style={externalCSS.text}>Clenliness rating</Text>
-        <TextInput
-          style={externalCSS.inputBox}
-          placeholder={this.props.route.params.review.clenliness_rating.toString()}
-          onChangeText={(clenliness) => this.setState({ clenliness })}
-          value={this.setState.clenliness}
-        />
+        <View style={externalCSS.rowContainer}>
+          <Text style={externalCSS.text}> Overall Rating</Text>
+          <Picker
+            selectedValue={this.state.rating.toString()}
+            style={externalCSS.picker}
+            onValueChange={(rating) => this.setState({ rating })}
+          >
+            <Picker.Item label="0" value="0" />
+            <Picker.Item label="⭐" value="1" />
+            <Picker.Item label="⭐⭐" value="2" />
+            <Picker.Item label="⭐⭐⭐" value="3" />
+            <Picker.Item label="⭐⭐⭐⭐" value="4" />
+            <Picker.Item label="⭐⭐⭐⭐⭐" value="5" />
+          </Picker>
+        </View>
+        <View style={externalCSS.rowContainer}>
+          <Text style={externalCSS.text}> Price</Text>
+          <Picker
+            selectedValue={this.state.price.toString()}
+            style={externalCSS.picker}
+            onValueChange={(price) => this.setState({ price })}
+          >
+            <Picker.Item label="0" value="0" />
+            <Picker.Item label="⭐" value="1" />
+            <Picker.Item label="⭐⭐" value="2" />
+            <Picker.Item label="⭐⭐⭐" value="3" />
+            <Picker.Item label="⭐⭐⭐⭐" value="4" />
+            <Picker.Item label="⭐⭐⭐⭐⭐" value="5" />
+          </Picker>
+        </View>
+        <View style={externalCSS.rowContainer}>
+          <Text style={externalCSS.text}> Quality</Text>
+          <Picker
+            selectedValue={this.state.quality.toString()}
+            style={externalCSS.picker}
+            onValueChange={(quality) => this.setState({ quality })}
+          >
+            <Picker.Item label="0" value="0" />
+            <Picker.Item label="⭐" value="1" />
+            <Picker.Item label="⭐⭐" value="2" />
+            <Picker.Item label="⭐⭐⭐" value="3" />
+            <Picker.Item label="⭐⭐⭐⭐" value="4" />
+            <Picker.Item label="⭐⭐⭐⭐⭐" value="5" />
+          </Picker>
+        </View>
+        <View style={externalCSS.rowContainer}>
+          <Text style={externalCSS.text}> clenliness</Text>
+          <Picker
+            selectedValue={this.state.clenliness.toString()}
+            style={externalCSS.picker}
+            onValueChange={(clenliness) => this.setState({ clenliness })}
+          >
+            <Picker.Item label="0" value="0" />
+            <Picker.Item label="⭐" value="1" />
+            <Picker.Item label="⭐⭐" value="2" />
+            <Picker.Item label="⭐⭐⭐" value="3" />
+            <Picker.Item label="⭐⭐⭐⭐" value="4" />
+            <Picker.Item label="⭐⭐⭐⭐⭐" value="5" />
+          </Picker>
+        </View>
         <View style={externalCSS.buttonView}>
           <TouchableHighlight
             style={externalCSS.orangeButton}

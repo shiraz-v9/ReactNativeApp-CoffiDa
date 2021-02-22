@@ -12,6 +12,7 @@ import {
   TouchableHighlight,
 } from "react-native";
 import { externalCSS } from "../style/style";
+import * as ImagePicker from "react-native-image-picker";
 
 class Profile extends Component {
   //start my state
@@ -20,7 +21,7 @@ class Profile extends Component {
     this.state = {
       userDeets: [],
       favourites: [],
-      // myComments: [],
+      userPhoto: "",
     };
   }
 
@@ -52,7 +53,7 @@ class Profile extends Component {
   deleteReview = async (loc_id, rev_id) => {
     console.log("comment deets: " + loc_id + " " + rev_id);
     Alert.alert(
-      "Alert Title",
+      "Delete",
       "Chose wheter you want to delete review or photo only",
       [
         {
@@ -71,6 +72,31 @@ class Profile extends Component {
       { cancelable: false }
     );
   };
+
+  update(obj) {
+    console.log(obj.location.location_id, " ", obj.review.review_id);
+    console.log(this.state.userPhoto.uri);
+
+    Alert.alert(
+      "Update",
+      "Chose wheter you update or attach a photo",
+      [
+        {
+          text: "Cancel",
+          style: "cancel",
+        },
+        {
+          text: "Update Review",
+          onPress: () => this.updateReview(obj),
+        },
+        {
+          text: "Add Photo",
+          onPress: () => this.pickPhoto(obj),
+        },
+      ],
+      { cancelable: false }
+    );
+  }
 
   reviewDelete = async (loc_id, rev_id) => {
     const token = await AsyncStorage.getItem("token");
@@ -120,9 +146,102 @@ class Profile extends Component {
   };
 
   updateReview(obj) {
-    console.log("hi from update" + JSON.stringify(obj));
+    // console.log("hi from update" + JSON.stringify(obj));
     this.props.navigation.navigate("updateReview", obj);
   }
+
+  pickPhoto = async (obj) => {
+    console.log("pickPhoto");
+    if (this.state.userPhoto.uri == "") {
+      ToastAndroid.show("No photo selected..", ToastAndroid.SHORT);
+    } else {
+      const options = { noData: true };
+      console.log(obj.location.location_id, " ", obj.review.review_id);
+      ImagePicker.launchImageLibrary(options, (response) => {
+        if (response.uri) {
+          this.setState({
+            userPhoto: response,
+          });
+
+          this.postPhoto(obj);
+        }
+      });
+    }
+  };
+
+  postPhoto = async (obj) => {
+    console.log("postPhoto");
+    const token = await AsyncStorage.getItem("token");
+    const uri = this.state.userPhoto.uri;
+    const response = await fetch(uri);
+    const imgBlob = await response.blob();
+    return fetch(
+      "http://10.0.2.2:3333/api/1.0.0/location/" +
+        obj.location.location_id +
+        "/review/" +
+        obj.review.review_id +
+        "/photo",
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "image/jpeg",
+          "Content-Type": "image/png",
+          // "Content-Type": "application/octet-stream",
+          "X-Authorization": token,
+        },
+        body: this.state.userPhoto,
+      }
+    )
+      .then((response) => {
+        if (response.ok) {
+          console.log("Comment Updated with Photo");
+          ToastAndroid.show("Comment Updated with Photo", ToastAndroid.SHORT);
+          this.getUser(); //refresh list
+        }
+      })
+
+      .catch(function (error) {
+        console.log(
+          "There has been a problem with your fetch operation: " + error.message
+        );
+        // ADD THIS THROW error
+        throw error;
+      });
+  };
+
+  openPhoto = async (obj) => {
+    const token = await AsyncStorage.getItem("token");
+    console.log(obj.location.location_id + " " + obj.review.review_id);
+    fetch(
+      "http://10.0.2.2:3333/api/1.0.0/location/" +
+        obj.location.location_id +
+        "/review/" +
+        obj.review.review_id +
+        "/photo",
+      {
+        method: "GET",
+        headers: {
+          Accept: "image/jpeg",
+          Accept: "image/png",
+          "X-Authorization": token,
+        },
+      }
+    )
+      .then((response) => {
+        if (response.ok) {
+          console.log("OK.. getting photo");
+          this.props.navigation.navigate("Photo", {
+            locID: obj.location.location_id,
+            revID: obj.review.review_id,
+          });
+        } else {
+          console.log("No Photo found... ignore");
+        }
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  };
 
   unFavouriteLocation = async (obj) => {
     const locID = obj.location_id;
@@ -206,18 +325,23 @@ class Profile extends Component {
             data={this.state.userDeets.reviews}
             renderItem={({ item }) => (
               <View style={ss.myReview}>
-                <Image
-                  style={ss.image}
-                  source={{
-                    uri:
-                      "http://10.0.2.2:3333/api/1.0.0/location/" +
-                      item.location.location_id +
-                      "/review/" +
-                      item.review.review_id +
-                      "/photo?timestamp=" +
-                      Date.now(),
-                  }}
-                />
+                <TouchableHighlight
+                  onPress={() => this.openPhoto(item)}
+                  underlayColor="transparent"
+                >
+                  <Image
+                    style={ss.image}
+                    source={{
+                      uri:
+                        "http://10.0.2.2:3333/api/1.0.0/location/" +
+                        item.location.location_id +
+                        "/review/" +
+                        item.review.review_id +
+                        "/photo?timestamp=" +
+                        Date.now(),
+                    }}
+                  />
+                </TouchableHighlight>
                 <Text style={ss.ftext}>{item.review.review_body}</Text>
                 <View style={ss.tHighlight}>
                   <TouchableHighlight
@@ -235,7 +359,7 @@ class Profile extends Component {
 
                   <TouchableHighlight
                     // style={ss.touchableBtn}
-                    onPress={() => this.updateReview(item)} //RUN FUNCTION
+                    onPress={() => this.update(item)} //RUN FUNCTION
                     underlayColor="#fff"
                   >
                     <Text style={ss.text}>Update</Text>

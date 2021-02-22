@@ -41,4 +41,9 @@ export const externalCSS = StyleSheet.create({
     justifyContent: "space-around",
     alignItems: "center",
   },
+  rowContainer: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+  },
 });
