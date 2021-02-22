@@ -148,6 +148,15 @@ class loginAsync extends Component {
                 <Text style={externalCSS.boldWhiteTxt}>Sign Up</Text>
               </View>
             </TouchableHighlight>
+            <TouchableHighlight
+              style={externalCSS.orangeButton}
+              onPress={() => this.props.navigation.navigate("Settings")} //RUN FUNCTION
+              underlayColor="#fff"
+            >
+              <View>
+                <Text style={externalCSS.boldWhiteTxt}>Settings</Text>
+              </View>
+            </TouchableHighlight>
           </View>
         </View>
       </View>

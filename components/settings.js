@@ -36,7 +36,7 @@ class Settings extends Component {
         if (response.ok) {
           console.log("Database resampled");
           ToastAndroid.show("Database resampled ", ToastAndroid.SHORT);
-          this.props.navigation.navigate("Home");
+          this.props.navigation.navigate("loginAsync");
         }
       })
       .catch((error) => {
