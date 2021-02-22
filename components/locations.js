@@ -254,14 +254,12 @@ class locations extends Component {
     this.getLocationID();
     this.changeTitle();
     this.getUserFavourite();
-    // this.isReviewMine();
-    // this.getPhoto();
   }
   render() {
     if (this.state.isLoading) {
       return (
         <View>
-          <ActivityIndicator size="large" color="#f4a261" />
+          <ActivityIndicator size="large" color="#1d3557" />
         </View>
       );
     }

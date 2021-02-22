@@ -22,6 +22,7 @@ class Profile extends Component {
       userDeets: [],
       favourites: [],
       userPhoto: "",
+      isLoading: true,
     };
   }
 
@@ -41,6 +42,7 @@ class Profile extends Component {
       .then((response) => response.json())
       .then((responseJson) => {
         this.setState({
+          isLoading: false,
           userDeets: responseJson,
           favourites: responseJson.favourite_locations,
         });
@@ -172,9 +174,6 @@ class Profile extends Component {
   postPhoto = async (obj) => {
     console.log("postPhoto");
     const token = await AsyncStorage.getItem("token");
-    const uri = this.state.userPhoto.uri;
-    const response = await fetch(uri);
-    const imgBlob = await response.blob();
     return fetch(
       "http://10.0.2.2:3333/api/1.0.0/location/" +
         obj.location.location_id +
@@ -273,104 +272,114 @@ class Profile extends Component {
   }
 
   render() {
-    return (
-      <View style={externalCSS.container}>
-        <Text style={externalCSS.title}>My Profile</Text>
-        <Text style={externalCSS.text}>
-          Name: {this.state.userDeets.first_name}
-        </Text>
-        <Text style={externalCSS.text}>
-          Surname: {this.state.userDeets.last_name}
-        </Text>
-        <Text style={externalCSS.text}>
-          e-mail: {this.state.userDeets.email}
-        </Text>
-        <View style={ss.btnContainer}>
-          <TouchableHighlight
-            style={externalCSS.orangeButton}
-            onPress={() => this.props.navigation.navigate("Update")} //RUN FUNCTION
-            underlayColor="#fff"
-          >
-            <View>
-              <Text style={externalCSS.boldWhiteTxt}>Update User</Text>
-            </View>
-          </TouchableHighlight>
-        </View>
+    if (this.state.isLoading) {
+      return (
         <View>
-          <Text style={externalCSS.title}>My Favourite Locations:</Text>
-
-          <FlatList
-            style={ss.flatList}
-            data={this.state.userDeets.favourite_locations}
-            renderItem={({ item }) => (
-              <View style={ss.myReview}>
-                <Text style={ss.ftext}>{item.location_name}</Text>
-                <TouchableHighlight
-                  style={ss.tHighlight}
-                  onPress={() => this.unFavouriteLocation(item)} //RUN FUNCTION
-                  underlayColor="#fff"
-                >
-                  <Text style={ss.text}>Remove</Text>
-                </TouchableHighlight>
+          <ActivityIndicator size="large" color="#1d3557" />
+        </View>
+      );
+    } else {
+      return (
+        <View style={externalCSS.container}>
+          <Text style={externalCSS.title}>My Profile</Text>
+          <Text style={externalCSS.text}>
+            Name: {this.state.userDeets.first_name}
+          </Text>
+          <Text style={externalCSS.text}>
+            Surname: {this.state.userDeets.last_name}
+          </Text>
+          <Text style={externalCSS.text}>
+            e-mail: {this.state.userDeets.email}
+          </Text>
+          <View style={ss.btnContainer}>
+            <TouchableHighlight
+              style={externalCSS.orangeButton}
+              onPress={() =>
+                this.props.navigation.navigate("Update", this.state.userDeets)
+              } //RUN FUNCTION
+              underlayColor="#fff"
+            >
+              <View>
+                <Text style={externalCSS.boldWhiteTxt}>Update User</Text>
               </View>
-            )}
-            keyExtractor={(item) => item.location_id.toString()}
-          />
+            </TouchableHighlight>
+          </View>
+          <View>
+            <Text style={externalCSS.title}>My Favourite Locations:</Text>
 
-          <Text style={externalCSS.title}>My Reviews</Text>
-
-          <FlatList
-            style={ss.flatList}
-            keyExtractor={(item) => item.review.review_id.toString()}
-            data={this.state.userDeets.reviews}
-            renderItem={({ item }) => (
-              <View style={ss.myReview}>
-                <TouchableHighlight
-                  onPress={() => this.openPhoto(item)}
-                  underlayColor="transparent"
-                >
-                  <Image
-                    style={ss.image}
-                    source={{
-                      uri:
-                        "http://10.0.2.2:3333/api/1.0.0/location/" +
-                        item.location.location_id +
-                        "/review/" +
-                        item.review.review_id +
-                        "/photo?timestamp=" +
-                        Date.now(),
-                    }}
-                  />
-                </TouchableHighlight>
-                <Text style={ss.ftext}>{item.review.review_body}</Text>
-                <View style={ss.tHighlight}>
+            <FlatList
+              style={ss.flatList}
+              data={this.state.userDeets.favourite_locations}
+              renderItem={({ item }) => (
+                <View style={ss.myReview}>
+                  <Text style={ss.ftext}>{item.location_name}</Text>
                   <TouchableHighlight
-                    // style={ss.touchableBtn}
-                    onPress={() =>
-                      this.deleteReview(
-                        item.location.location_id,
-                        item.review.review_id
-                      )
-                    } //RUN FUNCTION
+                    style={ss.tHighlight}
+                    onPress={() => this.unFavouriteLocation(item)} //RUN FUNCTION
                     underlayColor="#fff"
                   >
-                    <Text style={ss.text}>Delete</Text>
-                  </TouchableHighlight>
-
-                  <TouchableHighlight
-                    // style={ss.touchableBtn}
-                    onPress={() => this.update(item)} //RUN FUNCTION
-                    underlayColor="#fff"
-                  >
-                    <Text style={ss.text}>Update</Text>
+                    <Text style={ss.text}>Remove</Text>
                   </TouchableHighlight>
                 </View>
-              </View>
-            )}
-          />
+              )}
+              keyExtractor={(item) => item.location_id.toString()}
+            />
+
+            <Text style={externalCSS.title}>My Reviews</Text>
+
+            <FlatList
+              style={ss.flatList}
+              keyExtractor={(item) => item.review.review_id.toString()}
+              data={this.state.userDeets.reviews}
+              renderItem={({ item }) => (
+                <View style={ss.myReview}>
+                  <TouchableHighlight
+                    onPress={() => this.openPhoto(item)}
+                    underlayColor="transparent"
+                  >
+                    <Image
+                      style={ss.image}
+                      source={{
+                        uri:
+                          "http://10.0.2.2:3333/api/1.0.0/location/" +
+                          item.location.location_id +
+                          "/review/" +
+                          item.review.review_id +
+                          "/photo?timestamp=" +
+                          Date.now(),
+                      }}
+                    />
+                  </TouchableHighlight>
+                  <Text style={ss.ftext}>{item.review.review_body}</Text>
+                  <View style={ss.tHighlight}>
+                    <TouchableHighlight
+                      // style={ss.touchableBtn}
+                      onPress={() =>
+                        this.deleteReview(
+                          item.location.location_id,
+                          item.review.review_id
+                        )
+                      } //RUN FUNCTION
+                      underlayColor="#fff"
+                    >
+                      <Text style={ss.text}>Delete</Text>
+                    </TouchableHighlight>
+
+                    <TouchableHighlight
+                      // style={ss.touchableBtn}
+                      onPress={() => this.update(item)} //RUN FUNCTION
+                      underlayColor="#fff"
+                    >
+                      <Text style={ss.text}>Update</Text>
+                    </TouchableHighlight>
+                  </View>
+                </View>
+              )}
+            />
+          </View>
         </View>
-      </View>
-    );
+      );
+    }
   }
 }
 export default Profile;

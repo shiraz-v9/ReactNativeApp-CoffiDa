@@ -18,7 +18,7 @@ class HomeScreen extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      // isLoading: true,
+      isLoading: true,
       userData: [],
       locations: [],
       q: "",
@@ -35,7 +35,6 @@ class HomeScreen extends Component {
       .then((response) => {
         if (response.ok) {
           this.setState({
-            // isLoading: true,
             userData: [],
             locations: [],
           });
@@ -126,93 +125,93 @@ class HomeScreen extends Component {
   }
 
   render() {
-    // if (this.state.isLoading) {
-    //   return (
-    //     <View>
-    //       <ActivityIndicator size="large" color="#f4a261" />
-    //     </View>
-    //   );
-    // } else {
-    return (
-      <View style={externalCSS.container}>
-        <Text>
-          <TouchableHighlight
-            // style={ss.thButton}
-            onPress={() => this.props.navigation.navigate("Profile")} //RUN FUNCTION
-            underlayColor="#fff"
-          >
-            <View>
-              <Text style={externalCSS.title}>
-                Welcome to CoffiDa mr {this.state.userData.last_name} 👋
-              </Text>
-            </View>
-          </TouchableHighlight>
-        </Text>
-        <Text style={externalCSS.text}>
-          Leave reviews and find your favourite coffee place.
-        </Text>
+    if (this.state.isLoading) {
+      return (
         <View>
-          <TextInput
-            style={externalCSS.inputBox}
-            placeholder="Query"
-            onChangeText={(q) => this.setState({ q })}
-            value={this.setState.q}
-          />
-          {/* <Button onPress={() => this.search()} title="Search" /> */}
-          <TouchableHighlight
-            style={externalCSS.orangeButton}
-            onPress={() => this.search()}
-            underlayColor="#fff"
-          >
-            <View>
-              <Text style={externalCSS.boldWhiteTxt}>Search</Text>
-            </View>
-          </TouchableHighlight>
+          <ActivityIndicator size="large" color="#1d3557" />
         </View>
-        <FlatList
-          style={ss.flatList}
-          data={this.state.locations}
-          renderItem={({ item }) => (
-            <TouchableOpacity
-              onPress={() =>
-                this.props.navigation.navigate("locations", {
-                  item: item.location_id,
-                  name: item.location_name,
-                  fav: this.state.userData.favourite_locations,
-                })
-              }
+      );
+    } else {
+      return (
+        <View style={externalCSS.container}>
+          <Text>
+            <TouchableHighlight
+              // style={ss.thButton}
+              onPress={() => this.props.navigation.navigate("Profile")} //RUN FUNCTION
+              underlayColor="#fff"
             >
-              <Text style={ss.text}>{item.location_name}</Text>
-            </TouchableOpacity>
-          )}
-          keyExtractor={(item) => item.location_id.toString()}
-        />
+              <View>
+                <Text style={externalCSS.title}>
+                  Welcome to CoffiDa mr {this.state.userData.last_name} 👋
+                </Text>
+              </View>
+            </TouchableHighlight>
+          </Text>
+          <Text style={externalCSS.text}>
+            Leave reviews and find your favourite coffee place.
+          </Text>
+          <View>
+            <TextInput
+              style={externalCSS.inputBox}
+              placeholder="Query"
+              onChangeText={(q) => this.setState({ q })}
+              value={this.setState.q}
+            />
+            {/* <Button onPress={() => this.search()} title="Search" /> */}
+            <TouchableHighlight
+              style={externalCSS.orangeButton}
+              onPress={() => this.search()}
+              underlayColor="#fff"
+            >
+              <View>
+                <Text style={externalCSS.boldWhiteTxt}>Search</Text>
+              </View>
+            </TouchableHighlight>
+          </View>
+          <FlatList
+            style={ss.flatList}
+            data={this.state.locations}
+            renderItem={({ item }) => (
+              <TouchableOpacity
+                onPress={() =>
+                  this.props.navigation.navigate("locations", {
+                    item: item.location_id,
+                    name: item.location_name,
+                    fav: this.state.userData.favourite_locations,
+                  })
+                }
+              >
+                <Text style={ss.text}>{item.location_name}</Text>
+              </TouchableOpacity>
+            )}
+            keyExtractor={(item) => item.location_id.toString()}
+          />
 
-        <View style={ss.btnContainer}>
-          <TouchableHighlight
-            style={externalCSS.orangeButton}
-            onPress={() => this.logOut()}
-            underlayColor="#fff"
-          >
-            <View>
-              <Text style={externalCSS.boldWhiteTxt}>Logout</Text>
-            </View>
-          </TouchableHighlight>
+          <View style={ss.btnContainer}>
+            <TouchableHighlight
+              style={externalCSS.orangeButton}
+              onPress={() => this.logOut()}
+              underlayColor="#fff"
+            >
+              <View>
+                <Text style={externalCSS.boldWhiteTxt}>Logout</Text>
+              </View>
+            </TouchableHighlight>
 
-          <TouchableHighlight
-            style={externalCSS.orangeButton}
-            onPress={() => this.tester()}
-            underlayColor="#fff"
-          >
-            <View>
-              <Text style={externalCSS.boldWhiteTxt}>Test</Text>
-            </View>
-          </TouchableHighlight>
+            <TouchableHighlight
+              style={externalCSS.orangeButton}
+              onPress={() => this.tester()}
+              underlayColor="#fff"
+            >
+              <View>
+                <Text style={externalCSS.boldWhiteTxt}>Test</Text>
+              </View>
+            </TouchableHighlight>
+          </View>
         </View>
-      </View>
-    );
+      );
+    }
   }
-  // }
 }
 
 export default HomeScreen;

@@ -23,8 +23,12 @@ class loginAsync extends Component {
     };
   }
 
+  componentDidMount() {
+    this.signedInUser();
+  }
+
   signedInUser = async () => {
-    const value = await AsyncStorage.getItem("token");
+    var value = await AsyncStorage.getItem("token");
     if (value !== null) {
       this.props.navigation.navigate("Home");
     }

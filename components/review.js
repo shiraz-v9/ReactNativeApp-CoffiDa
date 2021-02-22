@@ -60,25 +60,31 @@ class review extends Component {
         "\n",
       JSON.stringify(jsonReview)
     );
-
-    fetch("http://10.0.2.2:3333/api/1.0.0/location/" + getId + "/review", {
-      method: "POST",
-      headers: { "Content-Type": "application/json", "X-Authorization": token },
-      body: JSON.stringify(jsonReview),
-    })
-      .then((response) => {
-        if (response.ok) {
-          this.props.navigation.navigate("Home");
-          console.log("SUCCESS 200 OK...");
-          ToastAndroid.show("Review posted", ToastAndroid.SHORT);
-        } else {
-          console.log("error 401");
-        }
+    if (this.state.review === "") {
+      ToastAndroid.show("Complete the review first ", ToastAndroid.LONG);
+    } else {
+      fetch("http://10.0.2.2:3333/api/1.0.0/location/" + getId + "/review", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "X-Authorization": token,
+        },
+        body: JSON.stringify(jsonReview),
       })
-      .catch((error) => {
-        console.log(error);
-        alert("Some Issues encountered" + error);
-      });
+        .then((response) => {
+          if (response.ok) {
+            this.props.navigation.navigate("Home");
+            console.log("SUCCESS 200 OK...");
+            ToastAndroid.show("Review posted", ToastAndroid.SHORT);
+          } else {
+            console.log("error code");
+          }
+        })
+        .catch((error) => {
+          console.log(error);
+          alert("Some Issues encountered" + error);
+        });
+    }
   };
 
   imagePick = () => {
@@ -88,7 +94,6 @@ class review extends Component {
       const options = { mediaType: "photo" };
 
       ImagePicker.launchImageLibrary(options, (res) => {
-        // console.log("hey", res);
         if (res.uri) {
           this.setState({
             userPhoto: res,
