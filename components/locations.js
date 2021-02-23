@@ -85,7 +85,7 @@ class locations extends Component {
           comments: responseJson.location_reviews,
           profanityFilter: responseJson.location_reviews,
         });
-        console.log(JSON.stringify(this.state.coffeeDeets));
+        // console.log(JSON.stringify(this.state.coffeeDeets));
         this.profanityFilter();
       })
       .catch((error) => {
@@ -230,32 +230,35 @@ class locations extends Component {
         console.log("dislikeComments() " + error);
       });
   };
-
+  // Operator Mono
+  // Operator Mono Lig
+  // Cartograph CF
+  // JetBrains Mono
   profanityFilter() {
-    var x = this.state.coffeeDeets;
-    console.log(JSON.stringify(this.state.comments));
-    var locations = Object.keys(this.state.coffeeDeets).length; //llocation number
-    var i, y;
-    var reviewcount;
-    var CountReview = Object.keys(this.state.coffeeDeets.location_reviews)
-      .length;
+    this.state.coffeeDeets.location_reviews.forEach((item, i) => {
+      this.updateState(item, i);
+    });
+  }
 
-    for (var i = 0; i < CountReview; i++) {
-      var z = this.state.coffeeDeets.location_reviews[i].review_body;
-      console.log("REVIEWS : ", z, " \n");
-
-      if (z.includes("Grim")) {
-        console.log("true");
-        let index = i;
-        let profanityFilter = update(this.state.comments, {
-          [index]: {
-            review_body: { $set: " **** " },
-          },
-        });
-        this.setState({ profanityFilter });
-        console.log(profanityFilter);
-      }
+  updateState(item, i) {
+    var newstate;
+    if (
+      item.review_body.includes("tea") ||
+      item.review_body.includes("cakes")
+    ) {
+      console.log(i, item.review_body, " true --> profanity found");
+      newstate = update(this.state.profanityFilter, {
+        [i]: {
+          review_body: { $set: " **** " },
+        },
+      });
+      this.setState({
+        profanityFilter: newstate,
+      });
+    } else {
+      console.log(i, item.review_body, " false --> nothing to blur here");
     }
+    // console.log(JSON.stringify(this.state.profanityFilter));
   }
 
   componentDidMount() {
@@ -384,20 +387,8 @@ class locations extends Component {
               </View>
             )}
             keyExtractor={(item) => item.review_id.toString()}
-            // extraData={this.state.comments}
+            // extraData={this.state.coffeeDeets}
           />
-          {/* <FlatList
-            data={this.state.profanityFilter}
-            renderItem={({ item }) => (
-              <View style={ss.comment}>
-                <View style={ss.rowPhotoBody}>
-                  <Text style={externalCSS.text}>{item.review_body}</Text>
-                </View>
-              </View>
-            )}
-            keyExtractor={(item) => item.review_id.toString()}
-            // extraData={this.state.comments}
-          /> */}
         </View>
       </View>
     );
