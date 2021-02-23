@@ -48,13 +48,15 @@ class Settings extends Component {
     return (
       <View style={externalCSS.container}>
         <Text style={externalCSS.title}>Settings</Text>
+
         <View
           style={{
-            flexDirection: "row",
+            flexDirection: "column",
             justifyContent: "space-around",
-            marginTop: 200,
+            marginTop: 10,
           }}
         >
+          <Text style={externalCSS.text}>Reset all values in the database</Text>
           <TouchableHighlight
             style={externalCSS.orangeButton}
             onPress={() => this.reset()} //RUN FUNCTION
@@ -64,6 +66,9 @@ class Settings extends Component {
               <Text style={externalCSS.boldWhiteTxt}>Reset</Text>
             </View>
           </TouchableHighlight>
+          <Text style={externalCSS.text}>
+            Resample all values in the database
+          </Text>
           <TouchableHighlight
             style={externalCSS.orangeButton}
             onPress={() => this.resample()} //RUN FUNCTION

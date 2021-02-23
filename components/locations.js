@@ -12,7 +12,7 @@ import {
   TouchableHighlight,
   Image,
 } from "react-native";
-
+import update from "immutability-helper";
 import { externalCSS } from "../style/style";
 import MapView, { PROVIDER_GOOGLE, Marker } from "react-native-maps";
 
@@ -31,6 +31,7 @@ class locations extends Component {
       comments: [],
       photos: [],
       deleteBtn: "",
+      profanityFilter: [],
     };
   }
   changeTitle() {
@@ -82,7 +83,10 @@ class locations extends Component {
           isLoading: false,
           coffeeDeets: responseJson,
           comments: responseJson.location_reviews,
+          profanityFilter: responseJson.location_reviews,
         });
+        console.log(JSON.stringify(this.state.coffeeDeets));
+        this.profanityFilter();
       })
       .catch((error) => {
         console.error(error);
@@ -139,29 +143,6 @@ class locations extends Component {
         console.error("favouriteLocation() " + error);
       });
   };
-  // unFavouriteLocation = async () => {
-  //   const id = this.props.route.params.item;
-  //   const token = await AsyncStorage.getItem("token");
-  //   fetch("http://10.0.2.2:3333/api/1.0.0/location/" + id + "/favourite", {
-  //     method: "DELETE",
-  //     headers: {
-  //       Accept: "application/json",
-  //       "X-Authorization": token,
-  //     },
-  //   })
-  //     .then((response) => {
-  //       if (response.ok) {
-  //         console.log(
-  //           "Location: " + this.state.coffeeDeets.location_name + " favourited!"
-  //         );
-  //       } else {
-  //         console.log("error occured...");
-  //       }
-  //     })
-  //     .catch((error) => {
-  //       console.log("unFavouriteLocation() " + error);
-  //     });
-  // };
 
   photoFunc = async (obj) => {
     const token = await AsyncStorage.getItem("token");
@@ -250,6 +231,33 @@ class locations extends Component {
       });
   };
 
+  profanityFilter() {
+    var x = this.state.coffeeDeets;
+    console.log(JSON.stringify(this.state.comments));
+    var locations = Object.keys(this.state.coffeeDeets).length; //llocation number
+    var i, y;
+    var reviewcount;
+    var CountReview = Object.keys(this.state.coffeeDeets.location_reviews)
+      .length;
+
+    for (var i = 0; i < CountReview; i++) {
+      var z = this.state.coffeeDeets.location_reviews[i].review_body;
+      console.log("REVIEWS : ", z, " \n");
+
+      if (z.includes("Grim")) {
+        console.log("true");
+        let index = i;
+        let profanityFilter = update(this.state.comments, {
+          [index]: {
+            review_body: { $set: " **** " },
+          },
+        });
+        this.setState({ profanityFilter });
+        console.log(profanityFilter);
+      }
+    }
+  }
+
   componentDidMount() {
     this.getLocationID();
     this.changeTitle();
@@ -330,7 +338,7 @@ class locations extends Component {
             </View>
           </View>
           <FlatList
-            data={this.state.coffeeDeets.location_reviews}
+            data={this.state.profanityFilter}
             renderItem={({ item }) => (
               <View style={ss.comment}>
                 <View style={ss.rowPhotoBody}>
@@ -376,8 +384,20 @@ class locations extends Component {
               </View>
             )}
             keyExtractor={(item) => item.review_id.toString()}
-            extraData={this.state.comments}
+            // extraData={this.state.comments}
           />
+          {/* <FlatList
+            data={this.state.profanityFilter}
+            renderItem={({ item }) => (
+              <View style={ss.comment}>
+                <View style={ss.rowPhotoBody}>
+                  <Text style={externalCSS.text}>{item.review_body}</Text>
+                </View>
+              </View>
+            )}
+            keyExtractor={(item) => item.review_id.toString()}
+            // extraData={this.state.comments}
+          /> */}
         </View>
       </View>
     );
