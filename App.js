@@ -68,7 +68,19 @@ class App extends Component {
             component={locations}
             options={({ route }) => ({ title: route.params.name })}
           />
-          <Stack.Screen name="Photo" component={Photo} />
+          <Stack.Screen
+            name="Photo"
+            component={Photo}
+            options={{
+              headerStyle: {
+                backgroundColor: "#212529",
+              },
+              headerTintColor: "#fff",
+              headerTitleStyle: {
+                fontWeight: "bold",
+              },
+            }}
+          />
           <Stack.Screen
             name="review"
             component={review}

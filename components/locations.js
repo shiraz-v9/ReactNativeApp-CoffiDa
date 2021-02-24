@@ -15,6 +15,8 @@ import {
 import update from "immutability-helper";
 import { externalCSS } from "../style/style";
 import MapView, { PROVIDER_GOOGLE, Marker } from "react-native-maps";
+import Icon from "react-native-vector-icons/EvilIcons";
+import IconAnt from "react-native-vector-icons/AntDesign";
 
 class locations extends Component {
   //start my state
@@ -335,7 +337,10 @@ class locations extends Component {
                 underlayColor="#fff"
               >
                 <View>
-                  <Text style={externalCSS.boldWhiteTxt}> Leave a review </Text>
+                  <Text style={externalCSS.boldWhiteTxt}>
+                    {" "}
+                    <Icon name="comment" size={24} color="#fff" />{" "}
+                  </Text>
                 </View>
               </TouchableHighlight>
             </View>
@@ -371,18 +376,23 @@ class locations extends Component {
 
                 <View style={ss.inputBtnContainer}>
                   {/* BUTTON VIEW ⚠ */}
-                  <Text style={externalCSS.text}>
-                    👍
-                    {item.likes}
-                  </Text>
-                  <Button
+                  <Text style={externalCSS.text}>Likes {item.likes}</Text>
+                  <TouchableOpacity
+                    style={externalCSS.smallButton}
                     onPress={() => this.likeComments(item.review_id)}
-                    title="👍"
-                  />
-                  <Button
+                  >
+                    <Text style={externalCSS.boldWhiteTxt}>
+                      <IconAnt name="like2" size={18} color="#fff" />{" "}
+                    </Text>
+                  </TouchableOpacity>
+                  <TouchableOpacity
+                    style={externalCSS.smallButton}
                     onPress={() => this.dislikeComments(item.review_id)}
-                    title="👎"
-                  />
+                  >
+                    <Text style={externalCSS.boldWhiteTxt}>
+                      <IconAnt name="dislike2" size={18} color="#fff" />{" "}
+                    </Text>
+                  </TouchableOpacity>
                 </View>
               </View>
             )}

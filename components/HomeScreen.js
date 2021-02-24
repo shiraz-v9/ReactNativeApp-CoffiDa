@@ -10,8 +10,8 @@ import {
   TouchableHighlight,
 } from "react-native";
 import { externalCSS } from "../style/style";
-
 import { TouchableOpacity } from "react-native-gesture-handler";
+import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 
 class HomeScreen extends Component {
   constructor(props) {

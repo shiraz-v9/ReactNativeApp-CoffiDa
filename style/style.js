@@ -17,9 +17,15 @@ export const externalCSS = StyleSheet.create({
   },
   orangeButton: {
     padding: 10,
-    backgroundColor: "#f68e5f",
+    backgroundColor: "#011627",
     borderRadius: 10,
     width: 120,
+  },
+  smallButton: {
+    padding: 10,
+    backgroundColor: "#011627",
+    borderRadius: 10,
+    width: 50,
   },
   boldWhiteTxt: {
     //BOLD TEXT for Buttons
