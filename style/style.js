@@ -40,7 +40,7 @@ export const externalCSS = StyleSheet.create({
   },
   picker: {
     height: 50,
-    width: 165,
+    width: 100,
   },
   buttonView: {
     flexDirection: "row",

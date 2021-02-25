@@ -14,6 +14,8 @@ import {
 import { externalCSS } from "../style/style";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import { Rating, AirbnbRating } from "react-native-ratings";
+import { Picker } from "@react-native-picker/picker";
+import Icon from "react-native-vector-icons/AntDesign";
 
 class HomeScreen extends Component {
   constructor(props) {
@@ -27,6 +29,8 @@ class HomeScreen extends Component {
       price_rating: 0,
       quality_rating: 0,
       clenliness_rating: 0,
+      search_in: "",
+      limit: "",
     };
   }
 
@@ -68,13 +72,31 @@ class HomeScreen extends Component {
     }
   };
 
+  searchList(list) {
+    this.setState({
+      search_in: list,
+    });
+    setTimeout(() => this.search(), 50); //fixes slow rendering issues!
+  }
+
+  setLimit(value) {
+    this.setState({
+      limit: value,
+    });
+    setTimeout(() => this.search(), 50); //fixes slow rendering issues!
+  }
+
   search() {
     Keyboard.dismiss();
     console.log(
       this.state.overall_rating,
       this.state.price_rating,
       this.state.quality_rating,
-      this.state.clenliness_rating
+      this.state.clenliness_rating,
+      " list: ",
+      this.state.search_in,
+      " limit: ",
+      this.state.limit
     );
 
     var url = "http://10.0.2.2:3333/api/1.0.0/find?";
@@ -92,6 +114,12 @@ class HomeScreen extends Component {
     }
     if (this.state.clenliness_rating > 0) {
       url += "clenliness_rating=" + this.state.clenliness_rating + "&";
+    }
+    if (this.state.search_in != "") {
+      url += "search_in=" + this.state.search_in + "&";
+    }
+    if (this.state.limit != "") {
+      url += "limit=" + this.state.limit + "&";
     }
     this.getLocation(url);
   }
@@ -202,21 +230,23 @@ class HomeScreen extends Component {
             Leave reviews and find your favourite coffee place.
           </Text>
           <View>
-            <TextInput
-              style={externalCSS.inputBox}
-              placeholder="Query"
-              onChangeText={(q) => this.setState({ q })}
-              value={this.setState.q}
-            />
-            <TouchableHighlight
-              style={externalCSS.orangeButton}
-              onPress={() => this.search()}
-              underlayColor="#fff"
-            >
-              <View>
-                <Text style={externalCSS.boldWhiteTxt}>Search</Text>
-              </View>
-            </TouchableHighlight>
+            <View style={ss.searchView}>
+              <TextInput
+                style={ss.fieldBox}
+                placeholder="Places.. Locations"
+                onChangeText={(q) => this.setState({ q })}
+                value={this.setState.q}
+              />
+              <TouchableHighlight
+                style={externalCSS.smallButton}
+                onPress={() => this.search()}
+                underlayColor="#fff"
+              >
+                <Text style={externalCSS.boldWhiteTxt}>
+                  <Icon name="search1" size={18} color="#fff" />
+                </Text>
+              </TouchableHighlight>
+            </View>
             <View>
               <ScrollView horizontal={true}>
                 <View style={externalCSS.reviews}>
@@ -267,6 +297,40 @@ class HomeScreen extends Component {
                     size={externalCSS.reviewRating}
                   />
                 </View>
+                <View style={externalCSS.reviews}>
+                  <TouchableHighlight
+                    style={externalCSS.orangeButton}
+                    onPress={() => this.searchList("favourite")}
+                    underlayColor="#fff"
+                  >
+                    <View>
+                      <Text style={externalCSS.boldWhiteTxt}>Favourites</Text>
+                    </View>
+                  </TouchableHighlight>
+                  <TouchableHighlight
+                    style={externalCSS.orangeButton}
+                    onPress={() => this.searchList("reviewed")}
+                    underlayColor="#fff"
+                  >
+                    <View>
+                      <Text style={externalCSS.boldWhiteTxt}>Reviewed</Text>
+                    </View>
+                  </TouchableHighlight>
+                </View>
+                <View style={externalCSS.reviews}>
+                  <Text>Limit results</Text>
+                  <Picker
+                    selectedValue={this.state.limit}
+                    style={externalCSS.picker}
+                    onValueChange={(limit) => this.setLimit(limit)}
+                  >
+                    <Picker.Item label="1" value="1" />
+                    <Picker.Item label="2" value="2" />
+                    <Picker.Item label="3" value="3" />
+                    <Picker.Item label="4" value="4" />
+                    <Picker.Item label="5" value="5" />
+                  </Picker>
+                </View>
               </ScrollView>
             </View>
 
@@ -295,7 +359,7 @@ class HomeScreen extends Component {
             keyExtractor={(item) => item.location_id.toString()}
           />
 
-          <View style={ss.btnContainer}>
+          <View style={externalCSS.buttonView}>
             <TouchableHighlight
               style={externalCSS.orangeButton}
               onPress={() => this.logOut()}
@@ -327,17 +391,23 @@ export default HomeScreen;
 const ss = StyleSheet.create({
   text: {
     fontSize: 18,
-    color: "black",
     padding: 10,
   },
   flatList: {
     marginTop: 10,
     padding: 10,
     backgroundColor: "#e7ecef",
-    paddingBottom: 10,
+    // paddingBottom: 10,
   },
-  btnContainer: {
+  searchView: {
     flexDirection: "row",
-    justifyContent: "space-evenly",
+    alignItems: "center",
+    justifyContent: "space-between",
+  },
+  fieldBox: {
+    width: 280,
+    marginVertical: 10,
+    backgroundColor: "white",
+    borderRadius: 10,
   },
 });
