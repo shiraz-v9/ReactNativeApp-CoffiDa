@@ -13,7 +13,8 @@ import {
 } from "react-native";
 import { externalCSS } from "../style/style";
 import * as ImagePicker from "react-native-image-picker";
-
+import IconAnt from "react-native-vector-icons/AntDesign";
+import Ionicon from "react-native-vector-icons/Ionicons";
 class Profile extends Component {
   //start my state
   constructor(props) {
@@ -318,7 +319,9 @@ class Profile extends Component {
                     onPress={() => this.unFavouriteLocation(item)} //RUN FUNCTION
                     underlayColor="#fff"
                   >
-                    <Text style={ss.text}>Remove</Text>
+                    <View style={ss.text}>
+                      <Ionicon name="heart-dislike" size={18} />
+                    </View>
                   </TouchableHighlight>
                 </View>
               )}
@@ -362,7 +365,9 @@ class Profile extends Component {
                       } //RUN FUNCTION
                       underlayColor="#fff"
                     >
-                      <Text style={ss.text}>Delete</Text>
+                      <View style={ss.text}>
+                        <IconAnt name="delete" size={18} />
+                      </View>
                     </TouchableHighlight>
 
                     <TouchableHighlight
@@ -370,7 +375,9 @@ class Profile extends Component {
                       onPress={() => this.update(item)} //RUN FUNCTION
                       underlayColor="#fff"
                     >
-                      <Text style={ss.text}>Update</Text>
+                      <View style={ss.text}>
+                        <IconAnt name="edit" size={18} />
+                      </View>
                     </TouchableHighlight>
                   </View>
                 </View>
@@ -386,7 +393,7 @@ export default Profile;
 const ss = StyleSheet.create({
   flatList: {
     backgroundColor: "#e7ecef",
-    height: 230,
+    height: 200,
     padding: 10,
   },
   myReview: {

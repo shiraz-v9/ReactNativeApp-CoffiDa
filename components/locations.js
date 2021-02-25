@@ -7,7 +7,7 @@ import {
   ActivityIndicator,
   TouchableOpacity,
   FlatList,
-  Button,
+  PermissionsAndroid,
   ToastAndroid,
   TouchableHighlight,
   Image,
@@ -16,7 +16,9 @@ import update from "immutability-helper";
 import { externalCSS } from "../style/style";
 import MapView, { PROVIDER_GOOGLE, Marker } from "react-native-maps";
 import Icon from "react-native-vector-icons/EvilIcons";
+import Direction from "react-native-vector-icons/Entypo";
 import IconAnt from "react-native-vector-icons/AntDesign";
+import Geolocation from "@react-native-community/geolocation";
 
 class locations extends Component {
   //start my state
@@ -34,6 +36,8 @@ class locations extends Component {
       photos: [],
       deleteBtn: "",
       profanityFilter: [],
+      myCoordinates: [],
+      permissions: false,
     };
   }
   changeTitle() {
@@ -68,6 +72,52 @@ class locations extends Component {
       //   });
       // }
     }
+  }
+  geoLocation = async () => {
+    try {
+      const granted = await PermissionsAndroid.request(
+        PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
+        {
+          title: "Location Permission",
+          message:
+            "Permissions needed for calculating distance for CoffiDa Locations",
+          buttonNeutral: "Ask Me Later",
+          buttonNegative: "Cancel",
+          buttonPositive: "OK",
+        }
+      );
+      if (granted === PermissionsAndroid.RESULTS.GRANTED) {
+        console.log("You can use locations");
+        this.coordinates();
+      } else {
+        console.log("location permission denied");
+      }
+    } catch (err) {
+      console.warn(err);
+    }
+  };
+
+  coordinates() {
+    Geolocation.getCurrentPosition(
+      (position) => {
+        const myCoordinates = JSON.stringify(position);
+
+        this.setState({ myCoordinates: myCoordinates });
+        // console.log(this.state.myCoordinates);
+      },
+      (error) => Alert.alert("Error", JSON.stringify(error)),
+      { enableHighAccuracy: true, timeout: 20000, maximumAge: 1000 }
+    );
+  }
+
+  openMaps() {
+    console.log("yesssirrr");
+    this.props.navigation.navigate("Maps", {
+      obj: this.state.myCoordinates,
+      lat: this.state.coffeeDeets.latitude,
+      lon: this.state.coffeeDeets.longitude,
+      location: this.state.coffeeDeets.location_name,
+    });
   }
 
   getLocationID = async () => {
@@ -232,10 +282,7 @@ class locations extends Component {
         console.log("dislikeComments() " + error);
       });
   };
-  // Operator Mono
-  // Operator Mono Lig
-  // Cartograph CF
-  // JetBrains Mono
+
   profanityFilter() {
     this.state.coffeeDeets.location_reviews.forEach((item, i) => {
       this.updateState(item, i);
@@ -267,6 +314,7 @@ class locations extends Component {
     this.getLocationID();
     this.changeTitle();
     this.getUserFavourite();
+    this.geoLocation();
   }
   render() {
     if (this.state.isLoading) {
@@ -306,8 +354,23 @@ class locations extends Component {
             <Text style={externalCSS.text}>
               {this.state.coffeeDeets.location_town}
             </Text>
-            <TouchableOpacity onPress={() => this.favouriteLocation()}>
-              <Text style={externalCSS.title}>{this.state.heartColour}</Text>
+
+            <TouchableOpacity
+              style={externalCSS.smallButton}
+              onPress={() => this.openMaps()}
+            >
+              <Text style={externalCSS.boldWhiteTxt}>
+                <Direction name="direction" size={18} />
+              </Text>
+            </TouchableOpacity>
+
+            <TouchableOpacity
+              style={externalCSS.smallButton}
+              onPress={() => this.favouriteLocation()}
+            >
+              <Text style={externalCSS.boldWhiteTxt}>
+                {this.state.heartColour}
+              </Text>
             </TouchableOpacity>
           </View>
           <Text style={externalCSS.text}>

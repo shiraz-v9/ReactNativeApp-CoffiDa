@@ -14,6 +14,7 @@ import Update from "./components/updateUser";
 import updateReview from "./components/updateReview";
 import Photo from "./components/displayPhoto";
 import Settings from "./components/settings";
+import Maps from "./components/maps";
 
 const homeNavigation = () => {
   const Stack = createStackNavigator();
@@ -26,6 +27,7 @@ const homeNavigation = () => {
       <Stack.Screen name="Update" component={Update} />
       <Stack.Screen name="updateReview" component={updateReview} />
       <Stack.Screen name="Photo" component={Photo} />
+      <Stack.Screen name="Maps" component={Maps} />
     </Stack.Navigator>
   );
 };
