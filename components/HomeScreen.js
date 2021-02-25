@@ -58,7 +58,7 @@ class HomeScreen extends Component {
     const value = await AsyncStorage.getItem("token");
     if (value == null) {
       this.props.navigation.navigate("loginAsync");
-      console.log("deleted!");
+      console.log("signed out!");
     }
   };
   search() {
@@ -118,9 +118,21 @@ class HomeScreen extends Component {
   };
 
   componentDidMount() {
-    this.getUser();
+    // this.getUser();
     this.getLocation();
     this.search();
+    this.notLoggedIn = this.props.navigation.addListener("focus", () =>
+      this.notSignedIn()
+    );
+
+    this.autoRefresh = this.props.navigation.addListener("focus", () =>
+      this.search()
+    );
+  }
+
+  componentWillUnmount() {
+    this.notLoggedIn();
+    this.autoRefresh();
   }
 
   render() {
