@@ -26,7 +26,19 @@ const homeNavigation = () => {
       <Stack.Screen name="Profile" component={Profile} />
       <Stack.Screen name="Update" component={Update} />
       <Stack.Screen name="updateReview" component={updateReview} />
-      <Stack.Screen name="Photo" component={Photo} />
+      <Stack.Screen
+        name="Photo"
+        component={Photo}
+        options={{
+          headerStyle: {
+            backgroundColor: "#212529",
+          },
+          headerTintColor: "#fff",
+          headerTitleStyle: {
+            fontWeight: "bold",
+          },
+        }}
+      />
       <Stack.Screen name="Maps" component={Maps} />
     </Stack.Navigator>
   );
@@ -44,7 +56,6 @@ const logScreen = () => {
     </Stack.Navigator>
   );
 };
-
 export { logScreen };
 //   <NavigationContainer>
 //     <Stack.Navigator>
@@ -85,19 +96,7 @@ export { logScreen };
 //         component={locations}
 //         options={({ route }) => ({ title: route.params.name })}
 //       />
-//       <Stack.Screen
-//         name="Photo"
-//         component={Photo}
-//         options={{
-//           headerStyle: {
-//             backgroundColor: "#212529",
-//           },
-//           headerTintColor: "#fff",
-//           headerTitleStyle: {
-//             fontWeight: "bold",
-//           },
-//         }}
-//       />
+//
 //       <Stack.Screen
 //         name="review"
 //         component={review}

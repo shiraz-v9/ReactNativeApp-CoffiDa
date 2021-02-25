@@ -52,4 +52,8 @@ export const externalCSS = StyleSheet.create({
     justifyContent: "space-between",
     alignItems: "center",
   },
+  reviewRating: 15,
+  reviews: {
+    padding: 10,
+  },
 });

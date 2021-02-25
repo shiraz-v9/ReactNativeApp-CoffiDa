@@ -7,11 +7,13 @@ import {
   Text,
   View,
   StyleSheet,
+  ScrollView,
+  Keyboard,
   TouchableHighlight,
 } from "react-native";
 import { externalCSS } from "../style/style";
 import { TouchableOpacity } from "react-native-gesture-handler";
-import { useIsFocused } from "@react-navigation/native";
+import { Rating, AirbnbRating } from "react-native-ratings";
 
 class HomeScreen extends Component {
   constructor(props) {
@@ -21,6 +23,10 @@ class HomeScreen extends Component {
       userData: [],
       locations: [],
       q: "",
+      overall_rating: 0,
+      price_rating: 0,
+      quality_rating: 0,
+      clenliness_rating: 0,
     };
   }
 
@@ -58,14 +64,34 @@ class HomeScreen extends Component {
     const value = await AsyncStorage.getItem("token");
     if (value == null) {
       this.props.navigation.navigate("loginAsync");
-      console.log("signed out!");
+      console.log("you're signed out!");
     }
   };
-  search() {
-    var url = "http://10.0.2.2:3333/api/1.0.0/find";
 
+  search() {
+    Keyboard.dismiss();
+    console.log(
+      this.state.overall_rating,
+      this.state.price_rating,
+      this.state.quality_rating,
+      this.state.clenliness_rating
+    );
+
+    var url = "http://10.0.2.2:3333/api/1.0.0/find?";
     if (this.state.q != "") {
-      url += "?q=" + this.state.q + "&";
+      url += "q=" + this.state.q + "&";
+    }
+    if (this.state.overall_rating > 0) {
+      url += "overall_rating=" + this.state.overall_rating + "&";
+    }
+    if (this.state.price_rating > 0) {
+      url += "price_rating=" + this.state.price_rating + "&";
+    }
+    if (this.state.quality_rating > 0) {
+      url += "quality_rating=" + this.state.quality_rating + "&";
+    }
+    if (this.state.clenliness_rating > 0) {
+      url += "clenliness_rating=" + this.state.clenliness_rating + "&";
     }
     this.getLocation(url);
   }
@@ -85,6 +111,7 @@ class HomeScreen extends Component {
           isLoading: false,
           locations: responseJson,
         });
+        // this.getUser();
       })
       .catch((error) => {
         console.log("getLocation() " + error);
@@ -117,22 +144,35 @@ class HomeScreen extends Component {
       });
   };
 
+  ratingCompleted(rating, names) {
+    console.log("New Rating is: " + rating);
+    let stateObj = () => {
+      let returnObj = {};
+      returnObj[names] = rating;
+      return returnObj;
+    };
+    this.setState(stateObj);
+
+    setTimeout(() => this.search(), 50); //fixes slow rendering issues!
+  }
+
   componentDidMount() {
-    // this.getUser();
-    this.getLocation();
-    this.search();
+    this.getUser();
+    this.getLocation("http://10.0.2.2:3333/api/1.0.0/find");
+    // this.search();
     this.notLoggedIn = this.props.navigation.addListener("focus", () =>
       this.notSignedIn()
     );
 
     this.autoRefresh = this.props.navigation.addListener("focus", () =>
-      this.search()
+      this.getLocation("http://10.0.2.2:3333/api/1.0.0/find")
     );
   }
 
   componentWillUnmount() {
     this.notLoggedIn();
     this.autoRefresh();
+    // this.runSearch();
   }
 
   render() {
@@ -168,7 +208,6 @@ class HomeScreen extends Component {
               onChangeText={(q) => this.setState({ q })}
               value={this.setState.q}
             />
-            {/* <Button onPress={() => this.search()} title="Search" /> */}
             <TouchableHighlight
               style={externalCSS.orangeButton}
               onPress={() => this.search()}
@@ -178,6 +217,64 @@ class HomeScreen extends Component {
                 <Text style={externalCSS.boldWhiteTxt}>Search</Text>
               </View>
             </TouchableHighlight>
+            <View>
+              <ScrollView horizontal={true}>
+                <View style={externalCSS.reviews}>
+                  <Text style={externalCSS.text}>Overall</Text>
+                  <AirbnbRating
+                    count={5}
+                    reviews={["Terrible", "Bad", "Meh", "Nice", "Great"]}
+                    onFinishRating={(rating) =>
+                      this.ratingCompleted(rating, "overall_rating")
+                    }
+                    defaultRating={0}
+                    size={externalCSS.reviewRating}
+                  />
+                </View>
+                <View style={externalCSS.reviews}>
+                  <Text style={externalCSS.text}>Price</Text>
+                  <AirbnbRating
+                    count={5}
+                    reviews={["Terrible", "Bad", "Meh", "Nice", "Great"]}
+                    onFinishRating={(rating) =>
+                      this.ratingCompleted(rating, "price_rating")
+                    }
+                    defaultRating={0}
+                    size={externalCSS.reviewRating}
+                  />
+                </View>
+                <View style={externalCSS.reviews}>
+                  <Text style={externalCSS.text}>Quality</Text>
+                  <AirbnbRating
+                    count={5}
+                    reviews={["Terrible", "Bad", "Meh", "Nice", "Great"]}
+                    onFinishRating={(rating) =>
+                      this.ratingCompleted(rating, "quality_rating")
+                    }
+                    defaultRating={0}
+                    size={externalCSS.reviewRating}
+                  />
+                </View>
+                <View style={externalCSS.reviews}>
+                  <Text style={externalCSS.text}>Clenliness</Text>
+                  <AirbnbRating
+                    count={5}
+                    reviews={["Terrible", "Bad", "Meh", "Nice", "Great"]}
+                    onFinishRating={(rating) =>
+                      this.ratingCompleted(rating, "clenliness_rating")
+                    }
+                    defaultRating={0}
+                    size={externalCSS.reviewRating}
+                  />
+                </View>
+              </ScrollView>
+            </View>
+
+            {/* <Rating
+              showRating
+              onFinishRating={this.ratingCompleted}
+              style={{ paddingVertical: 10 }}
+            /> */}
           </View>
           <FlatList
             style={ss.flatList}
@@ -231,7 +328,7 @@ const ss = StyleSheet.create({
   text: {
     fontSize: 18,
     color: "black",
-    padding: 20,
+    padding: 10,
   },
   flatList: {
     marginTop: 10,
