@@ -13,7 +13,7 @@ import {
 } from "react-native";
 import { externalCSS } from "../style/style";
 import { TouchableOpacity } from "react-native-gesture-handler";
-import { Rating, AirbnbRating } from "react-native-ratings";
+import { AirbnbRating } from "react-native-ratings";
 import { Picker } from "@react-native-picker/picker";
 import Icon from "react-native-vector-icons/AntDesign";
 
@@ -30,7 +30,7 @@ class HomeScreen extends Component {
       quality_rating: 0,
       clenliness_rating: 0,
       search_in: "",
-      limit: "",
+      limit: 0,
     };
   }
 
@@ -67,7 +67,7 @@ class HomeScreen extends Component {
   notSignedIn = async () => {
     const value = await AsyncStorage.getItem("token");
     if (value == null) {
-      this.props.navigation.navigate("loginAsync");
+      this.props.navigation.navigate("Login");
       console.log("you're signed out!");
     }
   };
@@ -86,9 +86,24 @@ class HomeScreen extends Component {
     setTimeout(() => this.search(), 50); //fixes slow rendering issues!
   }
 
+  clearSearch() {
+    this.setState({
+      q: "",
+      overall_rating: 0,
+      price_rating: 0,
+      quality_rating: 0,
+      clenliness_rating: 0,
+      search_in: "",
+      limit: "",
+    });
+    setTimeout(() => this.search(), 50); //fixes slow rendering issues!
+  }
+
   search() {
     Keyboard.dismiss();
     console.log(
+      "Query: ",
+      this.state.q,
       this.state.overall_rating,
       this.state.price_rating,
       this.state.quality_rating,
@@ -118,7 +133,7 @@ class HomeScreen extends Component {
     if (this.state.search_in != "") {
       url += "search_in=" + this.state.search_in + "&";
     }
-    if (this.state.limit != "") {
+    if (this.state.limit > 0) {
       url += "limit=" + this.state.limit + "&";
     }
     this.getLocation(url);
@@ -197,11 +212,10 @@ class HomeScreen extends Component {
     );
   }
 
-  componentWillUnmount() {
+  componentWillUnmount = async () => {
     this.notLoggedIn();
     this.autoRefresh();
-    // this.runSearch();
-  }
+  };
 
   render() {
     if (this.state.isLoading) {
@@ -257,7 +271,7 @@ class HomeScreen extends Component {
                     onFinishRating={(rating) =>
                       this.ratingCompleted(rating, "overall_rating")
                     }
-                    defaultRating={0}
+                    defaultRating={this.state.overall_rating}
                     size={externalCSS.reviewRating}
                   />
                 </View>
@@ -269,7 +283,7 @@ class HomeScreen extends Component {
                     onFinishRating={(rating) =>
                       this.ratingCompleted(rating, "price_rating")
                     }
-                    defaultRating={0}
+                    defaultRating={this.state.price_rating}
                     size={externalCSS.reviewRating}
                   />
                 </View>
@@ -281,7 +295,7 @@ class HomeScreen extends Component {
                     onFinishRating={(rating) =>
                       this.ratingCompleted(rating, "quality_rating")
                     }
-                    defaultRating={0}
+                    defaultRating={this.state.quality_rating}
                     size={externalCSS.reviewRating}
                   />
                 </View>
@@ -293,7 +307,7 @@ class HomeScreen extends Component {
                     onFinishRating={(rating) =>
                       this.ratingCompleted(rating, "clenliness_rating")
                     }
-                    defaultRating={0}
+                    defaultRating={this.state.clenliness_rating}
                     size={externalCSS.reviewRating}
                   />
                 </View>
@@ -321,7 +335,7 @@ class HomeScreen extends Component {
                   <Text>Limit results</Text>
                   <Picker
                     selectedValue={this.state.limit}
-                    style={externalCSS.picker}
+                    style={ss.picker}
                     onValueChange={(limit) => this.setLimit(limit)}
                   >
                     <Picker.Item label="1" value="1" />
@@ -329,16 +343,24 @@ class HomeScreen extends Component {
                     <Picker.Item label="3" value="3" />
                     <Picker.Item label="4" value="4" />
                     <Picker.Item label="5" value="5" />
+                    <Picker.Item label="10" value="10" />
+                    <Picker.Item label="20" value="20" />
+                    <Picker.Item label="50" value="50" />
                   </Picker>
+                </View>
+                <View style={externalCSS.reviews}>
+                  <TouchableHighlight
+                    style={externalCSS.orangeButton}
+                    onPress={() => this.clearSearch()}
+                    underlayColor="#fff"
+                  >
+                    <View>
+                      <Text style={externalCSS.boldWhiteTxt}>clear</Text>
+                    </View>
+                  </TouchableHighlight>
                 </View>
               </ScrollView>
             </View>
-
-            {/* <Rating
-              showRating
-              onFinishRating={this.ratingCompleted}
-              style={{ paddingVertical: 10 }}
-            /> */}
           </View>
           <FlatList
             style={ss.flatList}
@@ -409,5 +431,8 @@ const ss = StyleSheet.create({
     marginVertical: 10,
     backgroundColor: "white",
     borderRadius: 10,
+  },
+  picker: {
+    width: 100,
   },
 });

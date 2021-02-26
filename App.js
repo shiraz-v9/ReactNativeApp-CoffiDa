@@ -12,7 +12,7 @@ import {
 import { NavigationContainer } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
-import { homeNavigation, logScreen } from "./screens";
+import { homeNavigation, logScreen, profileNavigation } from "./screens";
 import Icon from "react-native-vector-icons/Ionicons";
 
 import HomeScreen from "./components/HomeScreen";
@@ -25,7 +25,7 @@ import Update from "./components/updateUser";
 import updateReview from "./components/updateReview";
 import Photo from "./components/displayPhoto";
 import Settings from "./components/settings";
-
+import Ionicons from "react-native-vector-icons/Ionicons";
 class App extends Component {
   render() {
     const Tab = createBottomTabNavigator();
@@ -34,8 +34,23 @@ class App extends Component {
       <>
         <NavigationContainer>
           <Tab.Navigator
+            screenOptions={({ route }) => ({
+              tabBarIcon: ({ focused, color, size }) => {
+                let iconName;
+
+                if (route.name === "Home") {
+                  iconName = focused ? "home" : "home-outline";
+                } else if (route.name === "Profile") {
+                  iconName = focused ? "person" : "person-outline";
+                } else if (route.name === "Login") {
+                  iconName = focused ? "log-in" : "log-in-outline";
+                }
+                // You can return any component that you like here!
+                return <Ionicons name={iconName} size={size} color={color} />;
+              },
+            })}
             tabBarOptions={{
-              labelStyle: { fontSize: 20 },
+              labelStyle: { fontSize: 12 },
               activeTintColor: "red",
               inactiveTintColor: "black",
               showIcon: true,
@@ -49,11 +64,17 @@ class App extends Component {
               }}
             />
             <Tab.Screen
-              name="loginAsync"
+              name="Profile"
+              component={profileNavigation}
+              options={{
+                title: "Profile",
+              }}
+            />
+            <Tab.Screen
+              name="Login"
               component={logScreen}
               options={{ title: "Log-In" }}
             />
-            {/* <Tab.Screen name="Screen 3" component={Screen3} /> */}
           </Tab.Navigator>
         </NavigationContainer>
       </>

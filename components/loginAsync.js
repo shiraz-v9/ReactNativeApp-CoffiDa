@@ -5,6 +5,7 @@ import {
   View,
   TouchableHighlight,
   StyleSheet,
+  Keyboard,
   ToastAndroid,
 } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
@@ -90,7 +91,7 @@ class loginAsync extends Component {
     })
       .then((response) => response.json())
       .then((data) => {
-        // alert("Welcome back you have logged in with token " + data.token);
+        Keyboard.dismiss();
         console.log("Welcome back you have logged in with token " + data.token);
         this.setState({
           token: data,

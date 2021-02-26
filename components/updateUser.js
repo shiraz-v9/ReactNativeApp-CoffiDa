@@ -4,9 +4,7 @@ import {
   Text,
   TextInput,
   View,
-  Button,
-  Alert,
-  StyleSheet,
+  Keyboard,
   ToastAndroid,
   TouchableHighlight,
 } from "react-native";
@@ -22,6 +20,7 @@ class Update extends Component {
     };
   }
   updateUser = async () => {
+    Keyboard.dismiss();
     const token = await AsyncStorage.getItem("token");
     const asID = await AsyncStorage.getItem("id");
     const x = "cannot be empty!";
@@ -49,7 +48,8 @@ class Update extends Component {
       })
         .then((response) => {
           if (response.ok) {
-            this.props.navigation.navigate("Home");
+            this.props.navigation.navigate("Profile");
+            ToastAndroid.show("profile updated ", ToastAndroid.SHORT);
             console.log("SUCCESS 200 OK...profile updated");
           } else {
             console.log("error 401");

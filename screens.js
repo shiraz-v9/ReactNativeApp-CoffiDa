@@ -23,9 +23,7 @@ const homeNavigation = () => {
       <Stack.Screen name="Home" component={HomeScreen} />
       <Stack.Screen name="locations" component={locations} />
       <Stack.Screen name="review" component={review} />
-      <Stack.Screen name="Profile" component={Profile} />
-      <Stack.Screen name="Update" component={Update} />
-      <Stack.Screen name="updateReview" component={updateReview} />
+
       <Stack.Screen
         name="Photo"
         component={Photo}
@@ -57,6 +55,18 @@ const logScreen = () => {
   );
 };
 export { logScreen };
+
+const profileNavigation = () => {
+  const Stack = createStackNavigator();
+  return (
+    <Stack.Navigator>
+      <Stack.Screen name="Profile" component={Profile} />
+      <Stack.Screen name="Update" component={Update} />
+      <Stack.Screen name="updateReview" component={updateReview} />
+    </Stack.Navigator>
+  );
+};
+export { profileNavigation };
 //   <NavigationContainer>
 //     <Stack.Navigator>
 //       <Stack.Screen // moving this here so I make sure it's the first thing user sees.

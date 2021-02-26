@@ -49,10 +49,7 @@ class signup extends Component {
           ToastAndroid.SHORT
         );
         console.log("Success, ID created... ", JSON.stringify(data));
-        this.props.navigation.navigate(
-          "loginAsync",
-          JSON.stringify(jsonUserData)
-        );
+        this.props.navigation.navigate("Login");
       })
 
       .catch((error) => {

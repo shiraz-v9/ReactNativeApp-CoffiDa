@@ -268,6 +268,13 @@ class Profile extends Component {
 
   componentDidMount() {
     this.getUser();
+    this.autoRefresh = this.props.navigation.addListener("focus", () =>
+      this.getUser()
+    );
+  }
+
+  componentWillUnmount() {
+    this.autoRefresh();
   }
 
   render() {
