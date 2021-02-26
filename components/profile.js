@@ -268,15 +268,58 @@ class Profile extends Component {
       });
   };
 
+    logOut = async () => {
+    const token = await AsyncStorage.getItem("token");
+    const id = await AsyncStorage.getItem("id");
+    fetch("http://10.0.2.2:3333/api/1.0.0/user/logout", {
+      method: "POST",
+      headers: { "X-Authorization": token },
+    })
+      .then((response) => {
+        if (response.ok) {
+          this.setState({
+            userData: [],
+            locations: [],
+          });
+          AsyncStorage.clear();
+          console.log(
+            " Clearing state, logging out... deleting token: " +
+              token +
+              " id - " +
+              id
+          );
+          this.notSignedIn();
+        }
+      })
+
+      .catch((error) => {
+        alert(error);
+        console.log(error);
+      });
+  };
+
+    notSignedIn = async () => {
+    const value = await AsyncStorage.getItem("token");
+    if (value == null) {
+      this.props.navigation.navigate("Login");
+      console.log("you're signed out!");
+      ToastAndroid.show("you're signed out!", ToastAndroid.SHORT);
+    }
+  };
+
   componentDidMount() {
     this.getUser();
     this.autoRefresh = this.props.navigation.addListener("focus", () =>
       this.getUser()
     );
+    this.notLoggedIn = this.props.navigation.addListener("focus", () =>
+      this.notSignedIn()
+    );
   }
 
   componentWillUnmount() {
     this.autoRefresh();
+    this.notLoggedIn();
   }
 
   render() {
@@ -309,6 +352,16 @@ class Profile extends Component {
             >
               <View>
                 <Text style={externalCSS.boldWhiteTxt}>Update User</Text>
+              </View>
+            </TouchableHighlight>
+                      {/* <View style={externalCSS.buttonView}> */}
+            <TouchableHighlight
+              style={externalCSS.orangeButton}
+              onPress={() => this.logOut()}
+              underlayColor="#fff"
+            >
+              <View>
+                <Text style={externalCSS.boldWhiteTxt}>Logout</Text>
               </View>
             </TouchableHighlight>
           </View>

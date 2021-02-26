@@ -1,13 +1,12 @@
+/* eslint-disable no-unused-vars */
 import React, { Component } from "react";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import {
   Text,
   View,
   StyleSheet,
-  ActivityIndicator,
   TextInput,
   Alert,
-  Image,
   ToastAndroid,
   TouchableHighlight,
 } from "react-native";
@@ -16,7 +15,6 @@ import { externalCSS } from "../style/style";
 import * as ImagePicker from "react-native-image-picker";
 
 class review extends Component {
-  //start my state
   constructor(props) {
     super(props);
     this.state = {};
@@ -85,22 +83,22 @@ class review extends Component {
     }
   };
 
-  imagePick = () => {
-    if (this.state.review === "") {
-      ToastAndroid.show("Complete the review first ", ToastAndroid.LONG);
-    } else {
-      const options = { mediaType: "photo" };
+  // imagePick = () => {
+  //   if (this.state.review === "") {
+  //     ToastAndroid.show("Complete the review first ", ToastAndroid.LONG);
+  //   } else {
+  //     const options = { mediaType: "photo" };
 
-      ImagePicker.launchImageLibrary(options, (res) => {
-        if (res.uri) {
-          this.setState({
-            userPhoto: res,
-          });
-          console.log("state--> ", this.state.userPhoto);
-        }
-      });
-    }
-  };
+  //     ImagePicker.launchImageLibrary(options, (res) => {
+  //       if (res.uri) {
+  //         this.setState({
+  //           userPhoto: res,
+  //         });
+  //         console.log("state--> ", this.state.userPhoto);
+  //       }
+  //     });
+  //   }
+  // };
 
   componentDidMount() {
     this.changeTitle();
@@ -179,27 +177,27 @@ class review extends Component {
         <View style={externalCSS.buttonView}>
           <TouchableHighlight
             style={externalCSS.orangeButton}
-            onPress={() => this.leaveReview()} //RUN FUNCTION
+            onPress={() => this.leaveReview()} // RUN FUNCTION
             underlayColor="#fff"
           >
             <View>
               <Text style={externalCSS.boldWhiteTxt}>Post Review</Text>
             </View>
           </TouchableHighlight>
-          <TouchableHighlight
+          {/* <TouchableHighlight
             style={externalCSS.orangeButton}
-            onPress={() => this.imagePick()} //RUN FUNCTION
+            onPress={() => this.imagePick()} // RUN FUNCTION
             underlayColor="#fff"
           >
             <View>
               <Text style={externalCSS.boldWhiteTxt}>Add Photo</Text>
             </View>
-          </TouchableHighlight>
+          </TouchableHighlight> */}
         </View>
-        <Image
+        {/* <Image
           style={{ width: 350, height: 350 }}
           source={{ uri: this.state.userPhoto.uri }}
-        />
+        /> */}
       </View>
     );
   }

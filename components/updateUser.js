@@ -26,13 +26,13 @@ class Update extends Component {
     const token = await AsyncStorage.getItem("token");
     const asID = await AsyncStorage.getItem("id");
     const x = "cannot be empty!";
-    if (this.state.newPassword == "" || this.state.newPassword == " ") {
+    if (this.state.newPassword === "" || this.state.newPassword === " ") {
       ToastAndroid.show("password " + x, ToastAndroid.SHORT);
-    } else if (this.state.newName == "" || this.state.newName == " ") {
+    } else if (this.state.newName === "" || this.state.newName === " ") {
       ToastAndroid.show("name " + x, ToastAndroid.SHORT);
-    } else if (this.state.newEmail == "" || this.state.newEmail == " ") {
+    } else if (this.state.newEmail === "" || this.state.newEmail === " ") {
       ToastAndroid.show("email " + x, ToastAndroid.SHORT);
-    } else if (this.state.newSurname == "" || this.state.newSurname == " ") {
+    } else if (this.state.newSurname === "" || this.state.newSurname === " ") {
       ToastAndroid.show("last name " + x, ToastAndroid.SHORT);
     } else {
       fetch("http://10.0.2.2:3333/api/1.0.0/user/" + asID, {
@@ -95,7 +95,7 @@ class Update extends Component {
         />
         <TouchableHighlight
           style={externalCSS.orangeButton}
-          onPress={() => this.updateUser()} //RUN FUNCTION
+          onPress={() => this.updateUser()} // RUN FUNCTION
           underlayColor="#fff"
         >
           <View>

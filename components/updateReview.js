@@ -38,6 +38,14 @@ class review extends Component {
   }
 
   updateReview = async () => {
+    var jsonReview = {
+      overall_rating: parseInt(this.state.rating),
+      price_rating: parseInt(this.state.price),
+      quality_rating: parseInt(this.state.quality),
+      clenliness_rating: parseInt(this.state.clenliness),
+      review_body: this.state.review,
+    };
+    
     console.log(
       "update? " +
         this.state.review +
@@ -47,13 +55,6 @@ class review extends Component {
         this.state.clenliness
     );
 
-    var jsonReview = {
-      overall_rating: parseInt(this.state.rating),
-      price_rating: parseInt(this.state.price),
-      quality_rating: parseInt(this.state.quality),
-      clenliness_rating: parseInt(this.state.clenliness),
-      review_body: this.state.review,
-    };
     if (jsonReview.review_body == "" || jsonReview.review_body == " ") {
       ToastAndroid.show("Review cannot be empty!", ToastAndroid.LONG);
     } else {
@@ -76,64 +77,70 @@ class review extends Component {
             this.props.navigation.navigate("Home");
             console.log("Review updated");
             ToastAndroid.show("Review updated", ToastAndroid.SHORT);
-            this.uploadPhoto(locID, revID, token);
+            // this.uploadPhoto(locID, revID, token);
             this.props.navigation.navigate("Profile");
           } else {
             console.log("error 401");
           }
         })
         .catch((error) => {
-          console.error(error);
-        });
-    }
-  };
-
-  uploadPhoto(locID, revID, token) {
-    if (this.state.userPhoto.uri == "") {
-      ToastAndroid.show("No photo selected..", ToastAndroid.SHORT);
-    } else {
-      console.log(locID, revID, token);
-      fetch(
-        "http://10.0.2.2:3333/api/1.0.0/location/" +
-          locID +
-          "/review/" +
-          revID +
-          "/photo",
-        {
-          method: "POST",
-          headers: {
-            Accept: "image/jpeg",
-            Accept: "image/png",
-            "X-Authorization": token,
-          },
-          body: JSON.stringify(this.state.userPhoto),
-        }
-      )
-        .then((response) => {
-          if (response.ok) {
-            console.log("Comment Updated with Photo");
-            ToastAndroid.show("Comment Updated with Photo", ToastAndroid.SHORT);
-          }
-        })
-
-        .catch((error) => {
           console.log(error);
         });
     }
-  }
-
-  imagePick = () => {
-    const options = { mediaType: "photo" };
-
-    ImagePicker.launchImageLibrary(options, (res) => {
-      if (res.uri) {
-        this.setState({
-          userPhoto: res,
-        });
-        console.log("state--> ", this.state.userPhoto);
-      }
-    });
   };
+
+  // uploadPhoto(locID, revID, token) {
+  //   if (this.state.userPhoto.uri == "") {
+  //     ToastAndroid.show("No photo selected..", ToastAndroid.SHORT);
+  //   } else {
+  //     console.log(locID, revID, token);
+  //     fetch(
+  //       "http://10.0.2.2:3333/api/1.0.0/location/" +
+  //         locID +
+  //         "/review/" +
+  //         revID +
+  //         "/photo",
+  //       {
+  //         method: "POST",
+  //         headers: {
+  //           Accept: "image/jpeg",
+  //           Accept: "image/png",
+  //           "X-Authorization": token,
+  //         },
+  //         body: this.state.userPhoto,
+  //       }
+  //     )
+  //       .then((response) => {
+  //         if (response.ok) {
+  //           console.log("Comment Updated with Photo");
+  //           ToastAndroid.show("Comment Updated with Photo", ToastAndroid.SHORT);
+  //         }
+  //       })
+
+  //       .catch((error) => {
+  //         console.log(error);
+  //       });
+  //   }
+  // }
+
+  // pickPhoto = async (obj) => {
+  //   console.log("pickPhoto");
+  //   if (this.state.userPhoto.uri == "") {
+  //     ToastAndroid.show("No photo selected..", ToastAndroid.SHORT);
+  //   } else {
+  //     const options = { noData: true };
+  //     console.log(obj.location.location_id, " ", obj.review.review_id);
+  //     ImagePicker.launchImageLibrary(options, (response) => {
+  //       if (response.uri) {
+  //         this.setState({
+  //           userPhoto: response,
+  //         });
+
+  //         this.uploadPhoto(obj);
+  //       }
+  //     });
+  //   }
+  // };
 
   componentDidMount() {
     this.changeTitle();
@@ -219,7 +226,7 @@ class review extends Component {
               <Text style={externalCSS.boldWhiteTxt}>Update review</Text>
             </View>
           </TouchableHighlight>
-          <TouchableHighlight
+          {/* <TouchableHighlight
             style={externalCSS.orangeButton}
             onPress={() => this.imagePick()} //RUN FUNCTION
             underlayColor="#fff"
@@ -227,12 +234,12 @@ class review extends Component {
             <View>
               <Text style={externalCSS.boldWhiteTxt}>Attach Photo</Text>
             </View>
-          </TouchableHighlight>
+          </TouchableHighlight> */}
         </View>
-        <Image
+        {/* <Image
           style={{ width: 70, height: 70 }}
           source={{ uri: this.state.userPhoto.uri }}
-        />
+        /> */}
       </View>
     );
   }

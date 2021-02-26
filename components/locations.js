@@ -1,3 +1,4 @@
+/* eslint-disable no-use-before-define */
 /* eslint-disable no-unused-vars */
 import React, { Component } from "react";
 import AsyncStorage from "@react-native-async-storage/async-storage";
@@ -276,7 +277,7 @@ class locations extends Component {
         if (response.ok) {
           console.log("Like Removed");
           ToastAndroid.show("Like Removed!", ToastAndroid.SHORT);
-          this.getLocationID(); //refresh
+          this.getLocationID(); // refresh
         }
       })
 
@@ -319,7 +320,7 @@ class locations extends Component {
     this.getLocationID();
     this.changeTitle();
     this.getUserFavourite();
-    this.geoLocation();
+    // this.geoLocation();
   }
 
   render() {
@@ -393,7 +394,6 @@ class locations extends Component {
           </Text>
           <View style={ss.sub}>
             <Text style={externalCSS.title}>Reviews</Text>
-            {/*⚡ --> Post Comment Section */}
             <View style={ss.inputBtnContainer}>
               <TouchableHighlight
                 style={externalCSS.orangeButton}
@@ -436,7 +436,7 @@ class locations extends Component {
                       }}
                     />
                   </TouchableHighlight>
-                  <Text style={externalCSS.text}>{item.review_body}</Text>
+                  <Text style={ss.fixedText}>{item.review_body}</Text>
                 </View>
                 <Text style={ss.flatList}>
                   ⭐{item.overall_rating} 💲{item.price_rating} 🍽
@@ -518,4 +518,8 @@ const ss = StyleSheet.create({
     justifyContent: "space-evenly",
     alignItems: "baseline",
   },
+  fixedText: {
+    fontSize: 18,
+    width: 250,
+  }
 });

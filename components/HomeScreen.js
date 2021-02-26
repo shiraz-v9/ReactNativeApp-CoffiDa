@@ -1,3 +1,4 @@
+/* eslint-disable no-use-before-define */
 /* eslint-disable no-else-return */
 /* eslint-disable no-unused-vars */
 import React, { Component } from "react";
@@ -7,6 +8,7 @@ import {
   ActivityIndicator,
   TextInput,
   Text,
+  ToastAndroid,
   View,
   StyleSheet,
   ScrollView,
@@ -18,6 +20,7 @@ import { TouchableOpacity } from "react-native-gesture-handler";
 import { AirbnbRating } from "react-native-ratings";
 import { Picker } from "@react-native-picker/picker";
 import Icon from "react-native-vector-icons/AntDesign";
+import MIcon from "react-native-vector-icons/MaterialIcons";
 
 class HomeScreen extends Component {
   constructor(props) {
@@ -36,41 +39,12 @@ class HomeScreen extends Component {
     };
   }
 
-  logOut = async () => {
-    const token = await AsyncStorage.getItem("token");
-    const id = await AsyncStorage.getItem("id");
-    fetch("http://10.0.2.2:3333/api/1.0.0/user/logout", {
-      method: "POST",
-      headers: { "X-Authorization": token },
-    })
-      .then((response) => {
-        if (response.ok) {
-          this.setState({
-            userData: [],
-            locations: [],
-          });
-          AsyncStorage.clear();
-          console.log(
-            " Clearing state, logging out... deleting token: " +
-              token +
-              " id - " +
-              id
-          );
-          this.notSignedIn();
-        }
-      })
-
-      .catch((error) => {
-        alert(error);
-        console.log(error);
-      });
-  };
-
   notSignedIn = async () => {
     const value = await AsyncStorage.getItem("token");
     if (value == null) {
       this.props.navigation.navigate("Login");
       console.log("you're signed out!");
+      ToastAndroid.show("you're signed out!", ToastAndroid.SHORT);
     }
   };
 
@@ -156,18 +130,18 @@ class HomeScreen extends Component {
           isLoading: false,
           locations: responseJson,
         });
-        // this.getUser();
+        this.getUser();
       })
       .catch((error) => {
         console.log("getLocation() " + error);
       });
   };
 
-  tester = async () => {
-    const token = await AsyncStorage.getItem("token");
-    const id = await AsyncStorage.getItem("id");
-    console.log(id + " ID and TOKEN AS: " + token);
-  };
+  // tester = async () => {
+  //   const token = await AsyncStorage.getItem("token");
+  //   const id = await AsyncStorage.getItem("id");
+  //   console.log(id + " ID and TOKEN AS: " + token);
+  // };
 
   getUser = async () => {
     const token = await AsyncStorage.getItem("token");
@@ -199,11 +173,12 @@ class HomeScreen extends Component {
     };
     this.setState(stateObj);
 
-    setTimeout(() => this.search(), 50); // fixes slow rendering issues!
+    setTimeout(() => this.search(), 150); // fixes slow rendering issues!
   }
 
   componentDidMount() {
     this.getUser();
+    this.notSignedIn();
     this.getLocation("http://10.0.2.2:3333/api/1.0.0/find");
     // this.search();
     this.notLoggedIn = this.props.navigation.addListener("focus", () =>
@@ -215,7 +190,7 @@ class HomeScreen extends Component {
     );
   }
 
-  componentWillUnmount = async () => {
+  componentWillUnmount() {
     this.notLoggedIn();
     this.autoRefresh();
   };
@@ -353,12 +328,12 @@ class HomeScreen extends Component {
                 </View>
                 <View style={externalCSS.reviews}>
                   <TouchableHighlight
-                    style={externalCSS.orangeButton}
+                    style={externalCSS.smallButton}
                     onPress={() => this.clearSearch()}
                     underlayColor="#fff"
                   >
                     <View>
-                      <Text style={externalCSS.boldWhiteTxt}>clear</Text>
+                      <Text style={externalCSS.boldWhiteTxt}><MIcon name="clear" size={18} color="#fff" /></Text>
                     </View>
                   </TouchableHighlight>
                 </View>
@@ -384,18 +359,9 @@ class HomeScreen extends Component {
             keyExtractor={(item) => item.location_id.toString()}
           />
 
-          <View style={externalCSS.buttonView}>
-            <TouchableHighlight
-              style={externalCSS.orangeButton}
-              onPress={() => this.logOut()}
-              underlayColor="#fff"
-            >
-              <View>
-                <Text style={externalCSS.boldWhiteTxt}>Logout</Text>
-              </View>
-            </TouchableHighlight>
 
-            <TouchableHighlight
+
+            {/* <TouchableHighlight
               style={externalCSS.orangeButton}
               onPress={() => this.tester()}
               underlayColor="#fff"
@@ -403,8 +369,8 @@ class HomeScreen extends Component {
               <View>
                 <Text style={externalCSS.boldWhiteTxt}>Test</Text>
               </View>
-            </TouchableHighlight>
-          </View>
+            </TouchableHighlight> */}
+          {/* </View> */}
         </View>
       );
     }

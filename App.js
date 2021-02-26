@@ -1,3 +1,6 @@
+/* eslint-disable class-methods-use-this */
+/* eslint-disable linebreak-style */
+/* eslint-disable no-unused-vars */
 // import "react-native-gesture-handler";
 
 import React, { Component } from 'react'
@@ -11,7 +14,7 @@ class App extends Component {
   render () {
     const Tab = createBottomTabNavigator()
     return (
-      <>
+      
         <NavigationContainer>
           <Tab.Navigator
             screenOptions={({ route }) => ({
@@ -57,7 +60,7 @@ class App extends Component {
             />
           </Tab.Navigator>
         </NavigationContainer>
-      </>
+      
     )
   }
 }
