@@ -12,7 +12,6 @@ import {
 } from "react-native";
 import { Picker } from "@react-native-picker/picker";
 import { externalCSS } from "../style/style";
-import * as ImagePicker from "react-native-image-picker";
 
 class review extends Component {
   constructor(props) {
@@ -82,23 +81,6 @@ class review extends Component {
         });
     }
   };
-
-  // imagePick = () => {
-  //   if (this.state.review === "") {
-  //     ToastAndroid.show("Complete the review first ", ToastAndroid.LONG);
-  //   } else {
-  //     const options = { mediaType: "photo" };
-
-  //     ImagePicker.launchImageLibrary(options, (res) => {
-  //       if (res.uri) {
-  //         this.setState({
-  //           userPhoto: res,
-  //         });
-  //         console.log("state--> ", this.state.userPhoto);
-  //       }
-  //     });
-  //   }
-  // };
 
   componentDidMount() {
     this.changeTitle();
@@ -184,20 +166,7 @@ class review extends Component {
               <Text style={externalCSS.boldWhiteTxt}>Post Review</Text>
             </View>
           </TouchableHighlight>
-          {/* <TouchableHighlight
-            style={externalCSS.orangeButton}
-            onPress={() => this.imagePick()} // RUN FUNCTION
-            underlayColor="#fff"
-          >
-            <View>
-              <Text style={externalCSS.boldWhiteTxt}>Add Photo</Text>
-            </View>
-          </TouchableHighlight> */}
         </View>
-        {/* <Image
-          style={{ width: 350, height: 350 }}
-          source={{ uri: this.state.userPhoto.uri }}
-        /> */}
       </View>
     );
   }

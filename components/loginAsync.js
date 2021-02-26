@@ -66,26 +66,19 @@ class loginAsync extends Component {
     );
   };
 
-  // didUserSignUp() { // AUTO sign in - WILL impolemented later!! ⚡⚡ Put this in render aswell
-  //   // const { email, password } = this.props.route.params;
-  //   if (this.props.route.params !== undefined) {
-  //     this.setState({
-  //       email: this.props.route.params.email,
-  //       password: this.props.route.params.password,
-  //     });
-  //     this.loginGetToken();
-  //   }
-  // }
-  // componentDidMount() {
-  //   this.didUserSignUp();
-  // }
-
   loginGetToken() {
     jsonData = {
       email: this.state.email,
       password: this.state.password,
     };
-
+    if (this.state.email === "" && this.state.password === "")
+    {
+      ToastAndroid.show(
+          "enter credentials please",
+          ToastAndroid.SHORT
+        );
+    } else
+    {
     fetch("http://10.0.2.2:3333/api/1.0.0/user/login", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -109,6 +102,7 @@ class loginAsync extends Component {
         );
         console.log(error);
       });
+      }
   }
 
   render() {
@@ -153,7 +147,7 @@ class loginAsync extends Component {
             </TouchableHighlight>
             <TouchableHighlight
               style={externalCSS.orangeButton}
-              onPress={() => this.props.navigation.navigate("Settings")} //RUN FUNCTION
+              onPress={() => this.props.navigation.navigate("Settings")} 
               underlayColor="#fff"
             >
               <View>

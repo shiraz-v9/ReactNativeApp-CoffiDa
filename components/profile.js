@@ -316,7 +316,7 @@ class Profile extends Component {
       this.notSignedIn()
     );
   }
-
+  
   componentWillUnmount() {
     this.autoRefresh();
     this.notLoggedIn();
@@ -347,14 +347,13 @@ class Profile extends Component {
               style={externalCSS.orangeButton}
               onPress={() =>
                 this.props.navigation.navigate("Update", this.state.userDeets)
-              } //RUN FUNCTION
+              } 
               underlayColor="#fff"
             >
               <View>
                 <Text style={externalCSS.boldWhiteTxt}>Update User</Text>
               </View>
             </TouchableHighlight>
-                      {/* <View style={externalCSS.buttonView}> */}
             <TouchableHighlight
               style={externalCSS.orangeButton}
               onPress={() => this.logOut()}
@@ -376,7 +375,7 @@ class Profile extends Component {
                   <Text style={ss.ftext}>{item.location_name}</Text>
                   <TouchableHighlight
                     style={ss.tHighlight}
-                    onPress={() => this.unFavouriteLocation(item)} //RUN FUNCTION
+                    onPress={() => this.unFavouriteLocation(item)} 
                     underlayColor="#fff"
                   >
                     <View style={ss.text}>
@@ -416,13 +415,12 @@ class Profile extends Component {
                   <Text style={ss.ftext}>{item.review.review_body}</Text>
                   <View style={ss.tHighlight}>
                     <TouchableHighlight
-                      // style={ss.touchableBtn}
                       onPress={() =>
                         this.deleteReview(
                           item.location.location_id,
                           item.review.review_id
                         )
-                      } //RUN FUNCTION
+                      } 
                       underlayColor="#fff"
                     >
                       <View style={ss.text}>
@@ -431,7 +429,6 @@ class Profile extends Component {
                     </TouchableHighlight>
 
                     <TouchableHighlight
-                      // style={ss.touchableBtn}
                       onPress={() => this.update(item)} // RUN FUNCTION
                       underlayColor="#fff"
                     >
@@ -474,7 +471,7 @@ const ss = StyleSheet.create({
     fontSize: 18,
     color: "black",
     padding: 10,
-    width: 180, //fixed dimensions for text don't chnage
+    width: 180, // fixed dimensions for text don't chnage
   },
 
   image: {

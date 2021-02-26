@@ -133,15 +133,9 @@ class HomeScreen extends Component {
         this.getUser();
       })
       .catch((error) => {
-        console.log("getLocation() " + error);
+        console.log(error);
       });
   };
-
-  // tester = async () => {
-  //   const token = await AsyncStorage.getItem("token");
-  //   const id = await AsyncStorage.getItem("id");
-  //   console.log(id + " ID and TOKEN AS: " + token);
-  // };
 
   getUser = async () => {
     const token = await AsyncStorage.getItem("token");
@@ -358,19 +352,6 @@ class HomeScreen extends Component {
             )}
             keyExtractor={(item) => item.location_id.toString()}
           />
-
-
-
-            {/* <TouchableHighlight
-              style={externalCSS.orangeButton}
-              onPress={() => this.tester()}
-              underlayColor="#fff"
-            >
-              <View>
-                <Text style={externalCSS.boldWhiteTxt}>Test</Text>
-              </View>
-            </TouchableHighlight> */}
-          {/* </View> */}
         </View>
       );
     }

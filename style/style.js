@@ -8,7 +8,6 @@ export const externalCSS = StyleSheet.create({
   },
   text: {
     fontSize: 18
-    // padding: 10,
   },
   title: {
     fontSize: 24,

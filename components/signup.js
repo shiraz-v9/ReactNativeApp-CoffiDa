@@ -1,3 +1,4 @@
+/* eslint-disable camelcase */
 /* eslint-disable no-unused-vars */
 import React, { Component } from 'react'
 import {
@@ -32,32 +33,42 @@ class signup extends Component {
       email: this.state.email,
       password: this.state.password
     }
+    if (this.state.first_name === "" && this.state.last_name === "" &&
+        this.state.email === "" && this.state.password === "")
+    {
+      ToastAndroid.show(
+        "enter all the credentials and try again",
+        ToastAndroid.SHORT
+      );
+    } else
+    {
 
-    fetch('http://10.0.2.2:3333/api/1.0.0/user', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        Accept: 'application/json'
-      },
-      body: JSON.stringify(jsonUserData)
-    })
-      .then((response) => response.json())
-      .then((data) => {
-        this.setState({
-          id: data.user_id
+      fetch('http://10.0.2.2:3333/api/1.0.0/user', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Accept: 'application/json'
+        },
+        body: JSON.stringify(jsonUserData)
+      })
+        .then((response) => response.json())
+        .then((data) => {
+          this.setState({
+            id: data.user_id
+          })
+          ToastAndroid.show(
+            'Account created! you can now log-in',
+            ToastAndroid.SHORT
+          )
+          console.log('Success, ID created... ', JSON.stringify(data))
+          this.props.navigation.navigate('Login')
         })
-        ToastAndroid.show(
-          'Account created! you can now log-in',
-          ToastAndroid.SHORT
-        )
-        console.log('Success, ID created... ', JSON.stringify(data))
-        this.props.navigation.navigate('Login')
-      })
 
-      .catch((error) => {
-        alert(error)
-        console.log(error)
-      })
+        .catch((error) => {
+          alert(error)
+          console.log(error)
+        })
+    }
   }
 
   render () {

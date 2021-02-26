@@ -44,7 +44,7 @@ class locations extends Component {
 
   changeTitle() {
     this.props.navigation.setOptions({
-      title: this.props.route.params.name, //change the title
+      title: this.props.route.params.name, // change the title
     });
   }
 
@@ -67,12 +67,6 @@ class locations extends Component {
           liked: true,
         });
       }
-      // else if (this.state.favList[i] != this.props.route.params.name)
-      // {
-      //   this.setState({
-      //     heartColour: "🤍",
-      //   });
-      // }
     }
   }
 
@@ -500,7 +494,7 @@ const ss = StyleSheet.create({
     paddingBottom: 10,
   },
   flatList: {
-    //CENTERED
+    // CENTERED
     fontSize: 18,
     textAlign: "center",
   },
