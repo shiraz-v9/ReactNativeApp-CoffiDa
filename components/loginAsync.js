@@ -71,7 +71,7 @@ class loginAsync extends Component {
       email: this.state.email,
       password: this.state.password,
     };
-    if (this.state.email === "" && this.state.password === "")
+    if (this.state.email === "" || this.state.password === "")
     {
       ToastAndroid.show(
           "enter credentials please",
