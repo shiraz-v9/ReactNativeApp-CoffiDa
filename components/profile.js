@@ -1,3 +1,6 @@
+/* eslint-disable no-use-before-define */
+/* eslint-disable no-else-return */
+/* eslint-disable no-unused-vars */
 import React, { Component } from "react";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import {
@@ -16,7 +19,7 @@ import * as ImagePicker from "react-native-image-picker";
 import IconAnt from "react-native-vector-icons/AntDesign";
 import Ionicon from "react-native-vector-icons/Ionicons";
 class Profile extends Component {
-  //start my state
+
   constructor(props) {
     super(props);
     this.state = {
@@ -27,7 +30,6 @@ class Profile extends Component {
     };
   }
 
-  //GET USER
   getUser = async () => {
     const token = await AsyncStorage.getItem("token");
     const asID = await AsyncStorage.getItem("id");
@@ -377,7 +379,7 @@ class Profile extends Component {
 
                     <TouchableHighlight
                       // style={ss.touchableBtn}
-                      onPress={() => this.update(item)} //RUN FUNCTION
+                      onPress={() => this.update(item)} // RUN FUNCTION
                       underlayColor="#fff"
                     >
                       <View style={ss.text}>

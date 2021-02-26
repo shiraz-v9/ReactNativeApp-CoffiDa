@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import React, { Component } from "react";
 import {
   Text,
@@ -13,7 +14,7 @@ import { externalCSS } from "../style/style";
 
 var jsonData;
 class loginAsync extends Component {
-  //start my state
+
   constructor(props) {
     super(props);
     this.state = {};
@@ -35,6 +36,7 @@ class loginAsync extends Component {
       this.props.navigation.navigate("Home");
     }
   };
+
   loggedInCoffiDa = async (data) => {
     try {
       await AsyncStorage.setItem("token", data.token);
@@ -48,8 +50,8 @@ class loginAsync extends Component {
   logOut = async () => {
     await AsyncStorage.clear();
   };
+
   checkJSON = async () => {
-    //TESTING ONLY⚡⚠
     const value = await AsyncStorage.getItem("token");
     const id = await AsyncStorage.getItem("id");
 
@@ -185,9 +187,6 @@ const ss = StyleSheet.create({
 
   centeredView: {
     display: "flex",
-    // flexWrap: "wrap",
-    // alignItems: "space-between",
     alignContent: "stretch",
-    // justifyContent: "center",
   },
 });

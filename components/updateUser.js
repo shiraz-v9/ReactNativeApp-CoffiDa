@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import React, { Component } from "react";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import {
@@ -19,6 +20,7 @@ class Update extends Component {
       newPassword: "",
     };
   }
+
   updateUser = async () => {
     Keyboard.dismiss();
     const token = await AsyncStorage.getItem("token");

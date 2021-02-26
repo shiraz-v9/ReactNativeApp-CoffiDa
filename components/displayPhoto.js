@@ -1,44 +1,46 @@
-import React, { Component } from "react";
-import { View, StyleSheet, Image } from "react-native";
+/* eslint-disable no-use-before-define */
+/* eslint-disable no-unused-vars */
+import React, { Component } from 'react'
+import { View, StyleSheet, Image } from 'react-native'
 
 class Photo extends Component {
-  //start my state
-  constructor(props) {
-    super(props);
-    this.state = {};
+  // start my state
+  constructor (props) {
+    super(props)
+    this.state = {}
   }
 
-  render() {
+  render () {
     return (
       <View style={ss.content}>
         <Image
           style={ss.image}
           source={{
             uri:
-              "http://10.0.2.2:3333/api/1.0.0/location/" +
+              'http://10.0.2.2:3333/api/1.0.0/location/' +
               this.props.route.params.locID +
-              "/review/" +
+              '/review/' +
               this.props.route.params.revID +
-              "/photo?timestamp=" +
-              Date.now(),
+              '/photo?timestamp=' +
+              Date.now()
           }}
         />
       </View>
-    );
+    )
   }
 }
 
-export default Photo;
+export default Photo
 
 const ss = StyleSheet.create({
   content: {
     flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
-    backgroundColor: "black",
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'black'
   },
   image: {
     width: 350,
-    height: 350,
-  },
-});
+    height: 350
+  }
+})

@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import React, { Component } from "react";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import {
@@ -14,7 +15,6 @@ import { externalCSS } from "../style/style";
 import { Picker } from "@react-native-picker/picker";
 
 class review extends Component {
-  //start my state
   constructor(props) {
     super(props);
     this.state = {};
@@ -28,9 +28,7 @@ class review extends Component {
       userPhoto: "",
     };
   }
-  componentDidMount() {
-    this.changeTitle();
-  }
+  
   changeTitle() {
     this.props.navigation.setOptions({
       title:
@@ -128,7 +126,6 @@ class review extends Component {
     const options = { mediaType: "photo" };
 
     ImagePicker.launchImageLibrary(options, (res) => {
-      // console.log("hey", res);
       if (res.uri) {
         this.setState({
           userPhoto: res,
@@ -137,6 +134,10 @@ class review extends Component {
       }
     });
   };
+
+  componentDidMount() {
+    this.changeTitle();
+  }
 
   render() {
     return (

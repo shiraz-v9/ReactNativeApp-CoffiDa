@@ -1,3 +1,5 @@
+/* eslint-disable no-else-return */
+/* eslint-disable no-unused-vars */
 import React, { Component } from "react";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import {
@@ -59,7 +61,7 @@ class HomeScreen extends Component {
       })
 
       .catch((error) => {
-        alert(JSON.stringify(jsonData) + error);
+        alert(error);
         console.log(error);
       });
   };
@@ -76,14 +78,14 @@ class HomeScreen extends Component {
     this.setState({
       search_in: list,
     });
-    setTimeout(() => this.search(), 50); //fixes slow rendering issues!
+    setTimeout(() => this.search(), 50); // fixes slow rendering issues!
   }
 
   setLimit(value) {
     this.setState({
       limit: value,
     });
-    setTimeout(() => this.search(), 50); //fixes slow rendering issues!
+    setTimeout(() => this.search(), 50); // fixes slow rendering issues!
   }
 
   clearSearch() {
@@ -96,10 +98,11 @@ class HomeScreen extends Component {
       search_in: "",
       limit: "",
     });
-    setTimeout(() => this.search(), 50); //fixes slow rendering issues!
+    setTimeout(() => this.search(), 50); // fixes slow rendering issues!
   }
 
   search() {
+    var url = "http://10.0.2.2:3333/api/1.0.0/find?";
     Keyboard.dismiss();
     console.log(
       "Query: ",
@@ -114,7 +117,6 @@ class HomeScreen extends Component {
       this.state.limit
     );
 
-    var url = "http://10.0.2.2:3333/api/1.0.0/find?";
     if (this.state.q != "") {
       url += "q=" + this.state.q + "&";
     }
@@ -160,6 +162,7 @@ class HomeScreen extends Component {
         console.log("getLocation() " + error);
       });
   };
+
   tester = async () => {
     const token = await AsyncStorage.getItem("token");
     const id = await AsyncStorage.getItem("id");
@@ -196,7 +199,7 @@ class HomeScreen extends Component {
     };
     this.setState(stateObj);
 
-    setTimeout(() => this.search(), 50); //fixes slow rendering issues!
+    setTimeout(() => this.search(), 50); // fixes slow rendering issues!
   }
 
   componentDidMount() {
@@ -230,7 +233,7 @@ class HomeScreen extends Component {
           <Text>
             <TouchableHighlight
               // style={ss.thButton}
-              onPress={() => this.props.navigation.navigate("Profile")} //RUN FUNCTION
+              onPress={() => this.props.navigation.navigate("Profile")} // RUN FUNCTION
               underlayColor="#fff"
             >
               <View>

@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import React, { Component } from "react";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import {
@@ -6,7 +7,7 @@ import {
   StyleSheet,
   ActivityIndicator,
   TouchableOpacity,
-  FlatList,
+  FlatList,Alert,
   PermissionsAndroid,
   ToastAndroid,
   TouchableHighlight,
@@ -21,7 +22,6 @@ import IconAnt from "react-native-vector-icons/AntDesign";
 import Geolocation from "@react-native-community/geolocation";
 
 class locations extends Component {
-  //start my state
   constructor(props) {
     super(props);
     this.state = {};
@@ -40,6 +40,7 @@ class locations extends Component {
       permissions: false,
     };
   }
+
   changeTitle() {
     this.props.navigation.setOptions({
       title: this.props.route.params.name, //change the title
@@ -73,6 +74,7 @@ class locations extends Component {
       // }
     }
   }
+
   geoLocation = async () => {
     try {
       const granted = await PermissionsAndroid.request(
@@ -93,7 +95,7 @@ class locations extends Component {
         console.log("location permission denied");
       }
     } catch (err) {
-      console.warn(err);
+      console.log(err);
     }
   };
 
@@ -111,7 +113,6 @@ class locations extends Component {
   }
 
   openMaps() {
-    console.log("yesssirrr");
     this.props.navigation.navigate("Maps", {
       obj: this.state.myCoordinates,
       lat: this.state.coffeeDeets.latitude,
@@ -255,6 +256,7 @@ class locations extends Component {
         console.log("likecomment() " + error);
       });
   };
+
   dislikeComments = async (revID) => {
     const token = await AsyncStorage.getItem("token");
     const id = this.props.route.params.item;
@@ -293,7 +295,10 @@ class locations extends Component {
     var newstate;
     if (
       item.review_body.includes("tea") ||
-      item.review_body.includes("cakes")
+      item.review_body.includes("cakes")||
+      item.review_body.includes("cake")||
+      item.review_body.includes("pastry")||
+      item.review_body.includes("pastries")
     ) {
       console.log(i, item.review_body, " true --> profanity found");
       newstate = update(this.state.profanityFilter, {
@@ -316,6 +321,7 @@ class locations extends Component {
     this.getUserFavourite();
     this.geoLocation();
   }
+
   render() {
     if (this.state.isLoading) {
       return (

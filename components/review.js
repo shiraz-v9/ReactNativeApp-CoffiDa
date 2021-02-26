@@ -30,12 +30,10 @@ class review extends Component {
       userPhoto: "",
     };
   }
-  componentDidMount() {
-    this.changeTitle();
-  }
+  
   changeTitle() {
     this.props.navigation.setOptions({
-      title: "Review " + this.props.route.params.location, //change the title
+      title: "Review " + this.props.route.params.location, 
     });
   }
 
@@ -103,6 +101,10 @@ class review extends Component {
       });
     }
   };
+
+  componentDidMount() {
+    this.changeTitle();
+  }
 
   render() {
     return (
@@ -198,7 +200,6 @@ class review extends Component {
           style={{ width: 350, height: 350 }}
           source={{ uri: this.state.userPhoto.uri }}
         />
-        {/* </View> */}
       </View>
     );
   }
